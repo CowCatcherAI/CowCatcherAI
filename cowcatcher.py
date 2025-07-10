@@ -74,13 +74,17 @@ def test_telegram_connection():
         print(f"ERROR testing Telegram connection: {str(e)}")
         return False
 
-def send_telegram_photo(image_path, caption):
+def send_telegram_photo(image_path, caption, disable_notification=False):
     """Sends a photo with caption to Telegram."""
     try:
         url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendPhoto"
         with open(image_path, 'rb') as photo:
             files = {'photo': photo}
-            data = {'chat_id': TELEGRAM_CHAT_ID, 'caption': caption}
+            data = {
+                'chat_id': TELEGRAM_CHAT_ID, 
+                'caption': caption,
+                'disable_notification': disable_notification
+            }
             response = requests.post(url, files=files, data=data)
             
         if response.status_code != 200:
@@ -137,6 +141,10 @@ process_every_n_frames = 2  # Process every 2 frames
 last_detection_time = None
 cooldown_period = 40  # Seconds between consecutive notifications
 
+# NEW: Variables for sound notifications
+notification_counter = 0  # Counter for notifications
+SOUND_EVERY_N_NOTIFICATIONS = 5  # Sound every 5th notification
+
 # New: Deque for tracking confidence score progression
 confidence_history = deque(maxlen=10)  # Keep last 10 confidence scores (shorter for fast events)
 frame_history = deque(maxlen=10)       # Keep corresponding frames
@@ -159,6 +167,7 @@ print(f"Collection time: {MIN_COLLECTION_TIME}-{COLLECTION_TIME} seconds")
 print(f"Stops automatically after {INACTIVITY_STOP_TIME} seconds of inactivity")
 print(f"Minimum {MIN_HIGH_CONFIDENCE_DETECTIONS} detections above {NOTIFY_THRESHOLD} required for notification")  # NEW: Log the new setting
 print(f"Telegram images: {'With bounding boxes' if SEND_ANNOTATED_IMAGES else 'Without bounding boxes'}")
+print(f"Sound notification every {SOUND_EVERY_N_NOTIFICATIONS} alerts")  # NEW: Log sound setting
 
 # Send a start message to confirm everything is working
 start_message = f"📋 Cowcatcher detection script started at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n⚠️ DISCLAIMER: Use at your own risk. This program uses Ultralytics YOLO and is subject to the GNU Affero General Public License v3.0 (AGPL-3.0). The complete source code is available at https://github.com/CowCatcherAI/CowCatcherAI."
@@ -356,6 +365,12 @@ try:
                         # MODIFIED: Send the selected images if we have both sufficient confidence
                         # and sufficient detections above the threshold
                         if max_conf >= NOTIFY_THRESHOLD and high_conf_detections >= MIN_HIGH_CONFIDENCE_DETECTIONS:
+                            # NEW: Increment the notification counter
+                            notification_counter += 1
+                            
+                            # NEW: Determine if sound should play (every 5th notification)
+                            play_sound = (notification_counter % SOUND_EVERY_N_NOTIFICATIONS == 0)
+                            
                             for rank, idx in enumerate(selected_indices):
                                 conf, img, ts, original_path, results_obj = event_detections[idx]
                                 
@@ -398,22 +413,30 @@ try:
                                     # Use the original path without annotations
                                     send_path = original_path
                                 
-                                # Message for Telegram
-                                message = f"Mounting detected ({ts}) - Confidence: {conf:.2f}\n"
+                                # NEW: Message for Telegram with sound indicator
+                                sound_indicator = "🔊" if play_sound else "🔇"
+                                message = f"{sound_indicator} Mounting detected ({ts}) - Confidence: {conf:.2f}\n"
                                 message += f"Stage: {stage} - Rank {rank+1}/{len(selected_indices)}\n"
-                                message += f"Event duration: {collection_duration:.1f}s"
+                                message += f"Event duration: {collection_duration:.1f}s\n"
+                                message += f"Alert #{notification_counter} (Sound: {'ON' if play_sound else 'OFF'})"
                                 
-                                # Send to Telegram
-                                response = send_telegram_photo(send_path, message)
+                                # NEW: Send to Telegram (sound off except for every 5th notification)
+                                response = send_telegram_photo(send_path, message, disable_notification=not play_sound)
                                 if response:
+                                    sound_status = "WITH sound" if play_sound else "without sound"
                                     print(f"Telegram message sent for {stage}: {conf:.2f} "
-                                          f"({'with' if SEND_ANNOTATED_IMAGES and send_path != original_path else 'without'} bounding boxes)")
+                                          f"({'with' if SEND_ANNOTATED_IMAGES and send_path != original_path else 'without'} bounding boxes) - {sound_status}")
                                 else:
                                     print(f"Telegram message sending failed for {stage}")
                             
                             # Set last detection time for cooldown
                             last_detection_time = current_time
                             print(f"Cooldown period of {cooldown_period} seconds started")
+                            # NEW: Log sound status
+                            if play_sound:
+                                print(f"🔊 SOUND NOTIFICATION #{notification_counter} sent!")
+                            else:
+                                print(f"🔇 Silent notification #{notification_counter} sent (sound every {SOUND_EVERY_N_NOTIFICATIONS})")
                         else:
                             # MODIFIED: Give clear reason why no notification was sent
                             if max_conf < NOTIFY_THRESHOLD:
@@ -468,7 +491,8 @@ finally:
     
     stop_message = f"⚠️ WARNING: Cowcatcher detection script stopped at {stop_time}\n"
     stop_message += f"Reason: {stop_reason}\n"
-    stop_message += f"Total frames processed: {frame_count}"
+    stop_message += f"Total frames processed: {frame_count}\n"
+    stop_message += f"Total notifications sent: {notification_counter}"  # NEW: Show total notification count
     
     send_telegram_message(stop_message)
     print(f"Stop message sent to Telegram")
