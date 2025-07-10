@@ -7,7 +7,7 @@ model = YOLO("yolo11m.pt")
 
 # Train with augmentation added
 model.train(
-    data="dataset_custom.yaml", 
+    data="dataset.yaml", 
     imgsz=640, 
     batch=8, 
     epochs=100,
