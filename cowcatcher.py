@@ -62,7 +62,7 @@ TELEGRAM_CHAT_ID = config.TELEGRAM_CHAT_ID
 # Test Telegram connection at startup
 def test_telegram_connection():
     try:
-        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/getMe"
+        url = f"//api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/getMe"
         response = requests.get(url)
         if response.status_code == 200:
             print("Telegram connection successfully tested.")
@@ -77,7 +77,7 @@ def test_telegram_connection():
 def send_telegram_photo(image_path, caption, disable_notification=False):
     """Sends a photo with caption to Telegram."""
     try:
-        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendPhoto"
+        url = f"//api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendPhoto"
         with open(image_path, 'rb') as photo:
             files = {'photo': photo}
             data = {
@@ -99,7 +99,7 @@ def send_telegram_photo(image_path, caption, disable_notification=False):
 def send_telegram_message(message):
     """Sends a text message to Telegram."""
     try:
-        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+        url = f"//api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
         data = {'chat_id': TELEGRAM_CHAT_ID, 'text': message}
         response = requests.post(url, data=data)
         
@@ -170,7 +170,7 @@ print(f"Telegram images: {'With bounding boxes' if SEND_ANNOTATED_IMAGES else 'W
 print(f"Sound notification every {SOUND_EVERY_N_NOTIFICATIONS} alerts")  # NEW: Log sound setting
 
 # Send a start message to confirm everything is working
-start_message = f"📋 Cowcatcher detection script started at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n⚠️ DISCLAIMER: Use at your own risk. This program uses Ultralytics YOLO and is subject to the GNU Affero General Public License v3.0 (AGPL-3.0). The complete source code is available at https://github.com/CowCatcherAI/CowCatcherAI."
+start_message = f"📋 Cowcatcher detection script started at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n⚠️ DISCLAIMER: Use at your own risk. This program uses Ultralytics YOLO and is subject to the GNU Affero General Public License v3.0 (AGPL-3.0)."
 send_telegram_message(start_message)
 
 def detect_mounting_peak(confidence_history, frame_history, timestamp_history):
