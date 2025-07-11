@@ -418,7 +418,7 @@ try:
                                 message = f"{sound_indicator} Mounting detected ({ts}) - Confidence: {conf:.2f}\n"
                                 message += f"Stage: {stage} - Rank {rank+1}/{len(selected_indices)}\n"
                                 message += f"Event duration: {collection_duration:.1f}s\n"
-                                message += f"Alert #{notification_counter} (Sound: {'ON' if play_sound else 'OFF'})"
+
                                 
                                 # NEW: Send to Telegram (sound off except for every 5th notification)
                                 response = send_telegram_photo(send_path, message, disable_notification=not play_sound)
