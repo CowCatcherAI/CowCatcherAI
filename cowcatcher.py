@@ -40,7 +40,7 @@ SEND_ANNOTATED_IMAGES = True  # Set to True to send annotated images, False for 
 
 print("Script started. Loading YOLO model...")
 # Load your trained YOLO model 
-model = YOLO("Cowcatcher.pt")
+model = YOLO("CowcatcherV13.pt")
 print("YOLO model successfully loaded")
 
 # RTSP URL for the camera - now retrieved from config
