@@ -171,8 +171,8 @@ The system has various adjustable threshold values:
 
 ```
 CowCatcherAI/
-├── CowcatcherV13.pt          # AI model file
-├── tochtdetectiebot.py       # Main program
+├── CowcatcherVx.pt          # AI model file
+├── Cowcatcher.py       # Main program
 ├── config.py                 # Configuration file
 └── mounting_detections/      # Folder for saved detections
 ```
