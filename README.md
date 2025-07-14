@@ -171,10 +171,13 @@ The system has various adjustable threshold values:
 
 ```
 CowCatcherAI/
+├── README.md
+├── LICENSE
 ├── CowcatcherVx.pt          # AI model file
-├── Cowcatcher.py       # Main program
-├── config.py                 # Configuration file
-└── mounting_detections/      # Folder for saved detections
+├── Cowcatcher.py            # Main program
+├── config.py                # Configuration file
+├── run_python_script.bat    # Run script
+└── mounting_detections/     # Folder for saved detections
 ```
 
 ## 📄 License
