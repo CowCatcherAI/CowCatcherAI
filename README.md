@@ -6,6 +6,8 @@ An automatic "Heat detection system" that monitors cows 24/7 and sends direct no
 
 CowCatcher AI is an open-source system that uses artificial intelligence to automatically recognize when a cow displays estrus behavior (mounting other cows). The system analyzes live camera footage and sends direct photos with notifications to your phone via Telegram.
 
+<img width="1280" height="720" alt="2025-07-20 13-06-58-f000087" src="https://github.com/user-attachments/assets/cc7e1973-5f8e-4a99-b97d-cd0b774f1d35" />
+
 📷 barn camera footage ──→ 🤖 AI Computer Vision ──→ ⚡ *mounting* detection ──→ 💽 save image ──→ 📲 Telegram notification with image
 
 ### Key Features
