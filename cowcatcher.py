@@ -62,7 +62,7 @@ TELEGRAM_CHAT_ID = config.TELEGRAM_CHAT_ID
 # Test Telegram connection at startup
 def test_telegram_connection():
     try:
-        url = f"//api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/getMe"
+        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/getMe"
         response = requests.get(url)
         if response.status_code == 200:
             print("Telegram connection successfully tested.")
@@ -77,7 +77,7 @@ def test_telegram_connection():
 def send_telegram_photo(image_path, caption, disable_notification=False):
     """Sends a photo with caption to Telegram."""
     try:
-        url = f"//api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendPhoto"
+        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendPhoto"
         with open(image_path, 'rb') as photo:
             files = {'photo': photo}
             data = {
@@ -99,7 +99,7 @@ def send_telegram_photo(image_path, caption, disable_notification=False):
 def send_telegram_message(message):
     """Sends a text message to Telegram."""
     try:
-        url = f"//api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+        url = f"https//api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
         data = {'chat_id': TELEGRAM_CHAT_ID, 'text': message}
         response = requests.post(url, data=data)
         
