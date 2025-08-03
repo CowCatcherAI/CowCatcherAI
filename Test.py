@@ -17,7 +17,7 @@ models = [
 # Directory paths (easy to modify)
 source_dir = r"C:/cowcatcher/test/images"  # Source directory with images
 labels_dir = r"C:/cowcatcher/test/labels"  # Directory with ground truth labels
-base_destination_dir = r"C:/cowcatcher/test/"  # Base destination directory for results
+base_destination_dir = r"C:/cowcatcher/test"  # Base destination directory for results
 
 confidence_threshold = 0.7  # Minimum confidence for YOLO filtering
 detection_threshold = 0.85  # Minimum confidence for "Detected" status
