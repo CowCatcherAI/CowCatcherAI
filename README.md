@@ -58,7 +58,7 @@ C:
 cd \Users\username\Documents\Cowcatcherai
 
 # Create a new conda environment
-conda create -n cowcatcher python=3.11
+conda create -n cowcatcherai python=3.11
 
 # Confirm with 'y' when prompted
 y
