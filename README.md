@@ -43,7 +43,7 @@ CowCatcher AI is an open-source system that uses artificial intelligence to auto
 4. Download the latest release of [CowCatcherAI](https://github.com/CowCatcherAI/CowCatcherAI/releases)
 
 ### Step 2: Prepare Project
-1. Extract the zip file to a folder of your choice (e.g., `C:/CowCatcherAI`)
+1. Extract the zip file to a folder of your choice (e.g., `C:\Users\username\Documents\Cowcatcherai`)
 2. Remember the path to this folder, you'll need to reference it constantly
 
 ### Step 3: Set Up Python Environment
@@ -55,7 +55,7 @@ Open **Anaconda Prompt** and execute the following commands:
 C:
 
 # Go to your project folder
-cd CowCatcherAI
+cd \Users\username\Documents\Cowcatcherai
 
 # Create a new conda environment
 conda create -n cowcatcher python=3.11
