@@ -72,11 +72,12 @@ conda activate cowcatcher
 ```bash
 # Install Ultralytics YOLO
 pip install ultralytics
+```
 
 ### Step 5: Check GPU Support, for nvidia drivers
 # Install PyTorch with CUDA support
 pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
-```
+
 ```bash
 # Start Python
 python
