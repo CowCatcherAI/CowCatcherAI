@@ -75,10 +75,11 @@ pip install ultralytics
 ```
 
 ### Step 5: Check GPU Support, for nvidia drivers
+
+```bash
 # Install PyTorch with CUDA support
 pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
 
-```bash
 # Start Python
 python
 
