@@ -35,8 +35,9 @@ CowCatcher AI is an open-source system that uses artificial intelligence to auto
 - **Scalable** more cameras require more powerful computer
 
 ### Software
-- Anaconda Python
-- Sublime Text or Visual Studio Code (optional)
+- Our Cowcatcher AI software
+- Anaconda Prompt
+- Sublime Text or Visual Studio Code 
 - WinRAR/7-Zip for extracting files
 
 ## 📥 Installation
