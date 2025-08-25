@@ -21,9 +21,14 @@ CowCatcher AI is an open-source system that uses artificial intelligence to auto
 
 ## 🛠️ Requirements
 
+### Bare minimum (for getting started)
+- **Standard computer**
+- **any IP camera** with RTSP support
+- **Internet connection**
+
 ### Hardware (for best performance)
 - **Computer** with NVIDIA graphics card (€600-1000 for 1-4 cameras)
-- **IP camera** with RTSP support (€80-170)
+- **any IP camera** with RTSP support (€80-170)
 - **PoE switch** for cameras (€80 for 4 ports)
 - **LAN cables** (€1 per meter)
 - **Internet connection**
