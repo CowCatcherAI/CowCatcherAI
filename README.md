@@ -204,7 +204,7 @@ This is an open source project. You may modify and improve it as you see fit. Co
 
 ## 📞 Support
 
-For questions or support, please contact via the project repository or community channels.
+For questions or support, please contact via the project repository or community channels, we have a page on facebook https://www.facebook.com/groups/1765616710830233 and Telegram https://t.me/+SphG4deaWVNkYTQ8
 
 ---
 ⚠️ Disclaimer
