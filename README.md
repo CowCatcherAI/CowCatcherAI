@@ -46,7 +46,7 @@ CowCatcher AI is an open-source system that uses artificial intelligence to auto
 1. Download and install [Anaconda](https://www.anaconda.com/products/distribution)
 2. Download and install [Sublime Text](https://www.sublimetext.com/) (optional)
 3. Download and install [WinRAR](https://www.win-rar.com/) or 7-Zip
-4. Download the latest release of [CowCatcherAI](https://github.com/CowCatcherAI/CowCatcherAI/releases)
+4. Download the latest release of [CowCatcherAI](https://github.com/CowCatcherAI/CowCatcherAI/releases)  
    or with command: `git clone https://github.com/CowCatcherAI/CowCatcherAI.git`
 
 ### Step 2: Prepare Project
