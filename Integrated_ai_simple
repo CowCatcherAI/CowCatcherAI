@@ -1,0 +1,234 @@
+from ultralytics import YOLO
+import cv2
+import numpy as np
+from PIL import Image
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
+import warnings
+import os
+
+# Onderdruk HuggingFace waarschuwingen
+warnings.filterwarnings("ignore", category=UserWarning)
+os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
+
+class ImprovedYOLOMoondreamAgent:
+    def __init__(self, yolo_model_path="yolov11.pt"):
+        print("🔄 Laden van modellen...")
+        
+        # Load YOLO model
+        print("📦 YOLO model laden...")
+        self.yolo_model = YOLO(yolo_model_path)
+        
+        # Load Moondream model met error handling
+        print("🌙 Moondream model laden...")
+        try:
+            self.moondream_model_id = "vikhyatk/moondream2"
+            self.moondream_model = AutoModelForCausalLM.from_pretrained(
+                self.moondream_model_id, 
+                trust_remote_code=True,
+                torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
+                device_map="auto" if torch.cuda.is_available() else None
+            )
+            self.moondream_tokenizer = AutoTokenizer.from_pretrained(self.moondream_model_id)
+            print("✅ Modellen succesvol geladen!")
+            
+            # Check GPU beschikbaarheid
+            if torch.cuda.is_available():
+                print(f"🚀 CUDA beschikbaar: {torch.cuda.get_device_name()}")
+            else:
+                print("💻 Draait op CPU (langzamer)")
+                
+        except Exception as e:
+            print(f"❌ Fout bij laden Moondream: {e}")
+            self.moondream_model = None
+            self.moondream_tokenizer = None
+    
+    def describe_with_moondream(self, image, question="Beschrijf kort wat je ziet in deze afbeelding."):
+        """Verbeterde Moondream beschrijving met error handling"""
+        if self.moondream_model is None:
+            return "Moondream model niet beschikbaar"
+        
+        try:
+            # Resize image als het te groot is (voor snelheid)
+            if image.size[0] > 512 or image.size[1] > 512:
+                image.thumbnail((512, 512), Image.Resampling.LANCZOS)
+            
+            # Encode en beschrijf
+            enc_image = self.moondream_model.encode_image(image)
+            response = self.moondream_model.answer_question(
+                enc_image, 
+                question, 
+                self.moondream_tokenizer
+            )
+            return response.strip()
+            
+        except Exception as e:
+            return f"Beschrijving fout: {str(e)[:50]}..."
+    
+    def analyze_single_image(self, image_path, conf_threshold=0.4, max_detections=5):
+        """
+        Analyseer enkele afbeelding met verbeterde output
+        """
+        if not os.path.exists(image_path):
+            print(f"❌ Bestand niet gevonden: {image_path}")
+            return []
+        
+        print(f"🔍 Analyseren van: {image_path}")
+        
+        # Load image
+        try:
+            image = cv2.imread(image_path)
+            if image is None:
+                print("❌ Kon afbeelding niet laden")
+                return []
+                
+            image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            pil_image = Image.fromarray(image_rgb)
+            print(f"📸 Afbeelding geladen: {pil_image.size}")
+            
+        except Exception as e:
+            print(f"❌ Fout bij laden afbeelding: {e}")
+            return []
+        
+        # Run YOLO prediction
+        print("🎯 YOLO detectie uitvoeren...")
+        results = self.yolo_model.predict(
+            source=image_path, 
+            conf=conf_threshold, 
+            verbose=False,
+            save=False
+        )
+        
+        descriptions = []
+        detection_count = 0
+        
+        for r in results:
+            boxes = r.boxes
+            if boxes is not None:
+                print(f"🔍 {len(boxes)} detecties gevonden")
+                
+                for i, box in enumerate(boxes):
+                    if detection_count >= max_detections:
+                        print(f"⚠️  Maximaal {max_detections} detecties geanalyseerd")
+                        break
+                    
+                    # Get bounding box info
+                    x1, y1, x2, y2 = box.xyxy[0].cpu().numpy().astype(int)
+                    confidence = float(box.conf[0].cpu().numpy())
+                    class_id = int(box.cls[0].cpu().numpy())
+                    class_name = r.names[class_id]
+                    
+                    print(f"\n📍 Detectie {detection_count + 1}:")
+                    print(f"   Klasse: {class_name}")
+                    print(f"   Confidence: {confidence:.2%}")
+                    print(f"   Locatie: ({x1}, {y1}) → ({x2}, {y2})")
+                    
+                    # Crop en valideer
+                    try:
+                        cropped_image = pil_image.crop((x1, y1, x2, y2))
+                        if cropped_image.size[0] < 10 or cropped_image.size[1] < 10:
+                            print("   ⚠️  Te klein om te analyseren")
+                            continue
+                            
+                        # Beschrijf met Moondream
+                        print("   🌙 Moondream analyse...")
+                        question = f"Does the cow in this bounding box appear to be calving (giving birth), for example with calf legs, head, or body parts visibly emerging from under the cow’s tail?"
+                        description = self.describe_with_moondream(cropped_image, question)
+                        
+                        detection_info = {
+                            'class': class_name,
+                            'confidence': confidence,
+                            'bbox': (x1, y1, x2, y2),
+                            'description': description,
+                            'size': cropped_image.size
+                        }
+                        
+                        descriptions.append(detection_info)
+                        print(f"   💬 Beschrijving: {description}")
+                        detection_count += 1
+                        
+                    except Exception as e:
+                        print(f"   ❌ Fout bij analyse: {e}")
+                        continue
+                
+                print(f"\n✅ Analyse voltooid: {len(descriptions)} beschrijvingen gegenereerd")
+        
+        return descriptions
+    
+    def create_annotated_image(self, image_path, descriptions, output_path="annotated_output.jpg"):
+        """
+        Maak een geannoteerde afbeelding met beschrijvingen
+        """
+        image = cv2.imread(image_path)
+        
+        for i, det in enumerate(descriptions):
+            x1, y1, x2, y2 = det['bbox']
+            
+            # Teken bounding box
+            cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
+            
+            # Voeg tekst toe
+            label = f"{det['class']}: {det['description'][:30]}..."
+            cv2.putText(
+                image, 
+                label, 
+                (x1, max(y1-10, 10)), 
+                cv2.FONT_HERSHEY_SIMPLEX, 
+                0.6, 
+                (0, 255, 0), 
+                2
+            )
+            
+            # Voeg nummer toe
+            cv2.putText(
+                image, 
+                str(i+1), 
+                (x1+5, y1+20), 
+                cv2.FONT_HERSHEY_SIMPLEX, 
+                0.8, 
+                (255, 255, 0), 
+                2
+            )
+        
+        cv2.imwrite(output_path, image)
+        print(f"💾 Geannoteerde afbeelding opgeslagen: {output_path}")
+        return output_path
+
+# Test functie
+def test_agent():
+    """Test de agent met een voorbeeld"""
+    print("🧪 Test van YOLO + Moondream Agent")
+    print("=" * 50)
+    
+    # Initialiseer agent
+    agent = ImprovedYOLOMoondreamAgent("yolo11m.pt")
+    
+    # Test met example.jpg (vervang door je bestand)
+    image_path = "example2.png"
+    
+    if os.path.exists(image_path):
+        descriptions = agent.analyze_single_image(
+            image_path, 
+            conf_threshold=0.3, 
+            max_detections=3
+        )
+        
+        if descriptions:
+            # Maak geannoteerde afbeelding
+            agent.create_annotated_image(image_path, descriptions)
+            
+            # Print samenvatting
+            print("\n📋 SAMENVATTING:")
+            print("=" * 50)
+            for i, det in enumerate(descriptions, 1):
+                print(f"{i}. {det['class']} ({det['confidence']:.1%})")
+                print(f"   → {det['description']}")
+                print()
+        else:
+            print("❌ Geen beschrijvingen gegenereerd")
+    else:
+        print(f"❌ Test bestand '{image_path}' niet gevonden")
+        print("💡 Plaats een afbeelding genaamd 'example.jpg' in deze map")
+
+if __name__ == "__main__":
+    test_agent()
