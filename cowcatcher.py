@@ -40,7 +40,7 @@ SEND_ANNOTATED_IMAGES = True  # Set to True to send annotated images, False for 
 
 print("Script started. Loading YOLO model...")
 # Load your trained YOLO model 
-model = YOLO("CowcatcherV14.pt")
+model = YOLO(config.MODEL_PATH)
 print("YOLO model successfully loaded")
 
 # RTSP URL for the camera - now retrieved from config
@@ -496,4 +496,5 @@ finally:
     
     send_telegram_message(stop_message)
     print(f"Stop message sent to Telegram")
+
 
