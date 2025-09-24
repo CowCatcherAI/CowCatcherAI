@@ -99,7 +99,7 @@ def send_telegram_photo(image_path, caption, disable_notification=False):
 def send_telegram_message(message):
     """Sends a text message to Telegram."""
     try:
-        url = f"https//api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
         data = {'chat_id': TELEGRAM_CHAT_ID, 'text': message}
         response = requests.post(url, data=data)
         
@@ -496,5 +496,6 @@ finally:
     
     send_telegram_message(stop_message)
     print(f"Stop message sent to Telegram")
+
 
 
