@@ -192,6 +192,7 @@ CowCatcherAI/
 ## 📄 License
 
 This project uses the GNU Affero General Public License v3.0 (AGPL-3.0). It is based on Ultralytics YOLO and is fully open source.
+IMPORTANT NOTICE: This software/model is NOT authorized for commercial use or distribution.
 
 ## 🙏 Acknowledgments
 
