@@ -4,3 +4,7 @@ For smmaller second fonts who wont be used as headliner is Roboto
 roboto is open source and can be installed from microsoft fonts
 
 The ral code we use for the logo's is Ral 6001,rgb code (56, 105, 56) Emerald Green
+
+You may alter or parody the logo as you wish, but do not claim that your modified version is from the official open source project.
+Please be fair and direct users to the official GitHub page: https://github.com/CowCatcherAI/CowCatcherAI
+The current official logo can be found on SeekLogo: link will be added
