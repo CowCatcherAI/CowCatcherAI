@@ -3,4 +3,4 @@ https://www.dafont.com/bebas-kai.font download link.
 For smmaller second fonts who wont be used as headliner is Roboto
 roboto is open source and can be installed from microsoft fonts
 
-The ral code we use for the logo's is Ral 6028, Pine green
+The ral code we use for the logo's is Ral 6001,rgb code (56, 105, 56) Emerald Green
