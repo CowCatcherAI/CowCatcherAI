@@ -1,0 +1,14 @@
+{
+  "id": "sample_001",
+  "image": "/path/to/your/image.jpg", 
+  "conversations": [
+    {
+      "from": "human",
+      "value": "<image>\nYour Question?"
+    },
+    {
+      "from": "gpt",
+      "value": "answer from the VLM."
+    }
+  ]
+}
