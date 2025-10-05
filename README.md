@@ -42,6 +42,17 @@ CowCatcher AI is an open-source system that uses artificial intelligence to auto
 
 ## 📥 Installation
 
+### First of All
+
+You can install this yourself by following the guide below, or contact me for assistance, i can also do the installation for free
+- **Email:** jacobsfarmsocial@gmail.com
+- **Telegram:** @Jacob5456
+
+For additional guidance, I've created video tutorials for the installation process. While they aren't completely up-to-date, they're quite helpful as the process is largely the same.
+
+**Video Playlist:**  
+https://www.youtube.com/playlist?list=PLAa1RFX0i2uCmmDactfR1bR208mwl6KY0
+
 ### Step 1: Download Software
 1. Download and install [Anaconda](https://www.anaconda.com/products/distribution)
 2. Download and install [Sublime Text](https://www.sublimetext.com/) (optional)
