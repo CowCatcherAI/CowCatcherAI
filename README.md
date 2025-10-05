@@ -62,10 +62,10 @@ Open **Anaconda Prompt** and execute the following commands:
 C:
 
 # Go to your project folder
-cd \Users\username\Documents\Cowcatcherai
+cd \Users\username\Documents\Cowcatcher
 
 # Create a new conda environment
-conda create -n cowcatcherai python=3.11
+conda create -n cowcatcher python=3.11
 
 # Confirm with 'y' when prompted
 y
