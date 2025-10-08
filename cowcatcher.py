@@ -1,7 +1,7 @@
 """
-CowCatcher Script with Threading Optimization
+CowCatcher Script with Threading Optimization and Multi-Chat Support
 Copyright (C) 2025
-latest adjustment 8-october-2025
+latest adjustment 9-october-2025
 
 This program uses YOLOv12 from Ultralytics (https://github.com/ultralytics/ultralytics)
 and is licensed under the terms of the GNU Affero General Public License (AGPL-3.0).
@@ -42,7 +42,7 @@ SHOW_LIVE_FEED = True
 SEND_ANNOTATED_IMAGES = True
 
 print("Script started. Loading YOLO model...")
-model = YOLO(config.MODEL_PATH)
+model = YOLO(config.MODEL_PATH, task='detect')
 print("YOLO model successfully loaded")
 
 rtsp_url_camera1 = config.RTSP_URL_CAMERA1
@@ -56,9 +56,11 @@ if not os.path.exists(save_folder):
 else:
     print(f"Folder '{save_folder}' already exists")
 
-# Telegram configuration
+# Telegram configuration - MULTI-CHAT SUPPORT
 TELEGRAM_BOT_TOKEN = config.TELEGRAM_BOT_TOKEN
-TELEGRAM_CHAT_ID = config.TELEGRAM_CHAT_ID
+TELEGRAM_CHAT_IDS = config.TELEGRAM_CHAT_IDS  
+
+print(f"Telegram configured for {len(TELEGRAM_CHAT_IDS)} chat(s)")
 
 # THREADING SETUP FOR TELEGRAM
 telegram_queue = Queue()
@@ -91,42 +93,48 @@ def telegram_worker():
             print(f"ERROR in telegram worker: {str(e)}")
 
 def _send_telegram_photo_sync(image_path, caption, disable_notification=False):
-    """Internal synchronous photo sender (runs in background thread)"""
-    try:
-        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendPhoto"
-        with open(image_path, 'rb') as photo:
-            files = {'photo': photo}
-            data = {
-                'chat_id': TELEGRAM_CHAT_ID,
-                'caption': caption,
-                'disable_notification': disable_notification
-            }
-            response = requests.post(url, files=files, data=data, timeout=30)
-            
-        if response.status_code != 200:
-            print(f"ERROR sending Telegram photo: {response.text}")
-            return False
-            
-        return True
-    except Exception as e:
-        print(f"ERROR sending Telegram photo: {str(e)}")
-        return False
+    """Internal synchronous photo sender (runs in background thread) - sends to all chat IDs"""
+    success_count = 0
+    for chat_id in TELEGRAM_CHAT_IDS:
+        try:
+            url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendPhoto"
+            with open(image_path, 'rb') as photo:
+                files = {'photo': photo}
+                data = {
+                    'chat_id': chat_id,
+                    'caption': caption,
+                    'disable_notification': disable_notification
+                }
+                response = requests.post(url, files=files, data=data, timeout=30)
+                
+            if response.status_code != 200:
+                print(f"ERROR sending Telegram photo to chat {chat_id}: {response.text}")
+            else:
+                success_count += 1
+                
+        except Exception as e:
+            print(f"ERROR sending Telegram photo to chat {chat_id}: {str(e)}")
+    
+    return success_count > 0
 
 def _send_telegram_message_sync(message):
-    """Internal synchronous message sender (runs in background thread)"""
-    try:
-        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-        data = {'chat_id': TELEGRAM_CHAT_ID, 'text': message}
-        response = requests.post(url, data=data, timeout=10)
-        
-        if response.status_code != 200:
-            print(f"ERROR sending Telegram message: {response.text}")
-            return False
+    """Internal synchronous message sender (runs in background thread) - sends to all chat IDs"""
+    success_count = 0
+    for chat_id in TELEGRAM_CHAT_IDS:
+        try:
+            url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+            data = {'chat_id': chat_id, 'text': message}
+            response = requests.post(url, data=data, timeout=10)
             
-        return True
-    except Exception as e:
-        print(f"ERROR sending Telegram message: {str(e)}")
-        return False
+            if response.status_code != 200:
+                print(f"ERROR sending Telegram message to chat {chat_id}: {response.text}")
+            else:
+                success_count += 1
+                
+        except Exception as e:
+            print(f"ERROR sending Telegram message to chat {chat_id}: {str(e)}")
+    
+    return success_count > 0
 
 def send_telegram_photo(image_path, caption, disable_notification=False):
     """Queue photo for sending (returns immediately)"""
@@ -140,12 +148,32 @@ def send_telegram_message(message):
 # END THREADING SETUP
 
 def test_telegram_connection():
-    """Test Telegram connection at startup"""
+    """Test Telegram connection at startup - tests all chat IDs"""
     try:
         url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/getMe"
         response = requests.get(url, timeout=10)
         if response.status_code == 200:
-            print("Telegram connection successfully tested.")
+            print("Telegram bot connection successfully tested.")
+            
+            # Test each chat ID
+            valid_chats = []
+            for chat_id in TELEGRAM_CHAT_IDS:
+                try:
+                    test_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/getChat"
+                    test_response = requests.get(test_url, params={'chat_id': chat_id}, timeout=10)
+                    if test_response.status_code == 200:
+                        valid_chats.append(chat_id)
+                        print(f"  ✓ Chat ID {chat_id} is valid")
+                    else:
+                        print(f"  ✗ Chat ID {chat_id} is invalid: {test_response.text}")
+                except Exception as e:
+                    print(f"  ✗ Could not verify chat ID {chat_id}: {str(e)}")
+            
+            if len(valid_chats) == 0:
+                print("ERROR: No valid chat IDs found!")
+                return False
+            
+            print(f"Successfully configured {len(valid_chats)}/{len(TELEGRAM_CHAT_IDS)} chat(s)")
             return True
         else:
             print(f"ERROR testing Telegram connection: {response.text}")
