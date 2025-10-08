@@ -16,7 +16,7 @@ MODEL_PATH = "CowcatcherV14.pt"
 
 # Telegram Bot Configuration
 TELEGRAM_BOT_TOKEN = "YOUR_BOT_TOKEN_HERE"  # Get from @BotFather on Telegram
-TELEGRAM_CHAT_ID = ["PRIMARY_CHAT_ID", "SECONDARY_CHAT_ID", "THIRD_CHAT_ID"]  # Add multiple users - Get ID from @userinfobot
+TELEGRAM_CHAT_IDS = ["PRIMARY_CHAT_ID", "SECONDARY_CHAT_ID", "THIRD_CHAT_ID"]  # Add multiple users - Get ID from @userinfobot
 
 # Network Configuration Examples:
 # Dont forget to enable RTSP streaming in camera software
