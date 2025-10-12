@@ -204,7 +204,7 @@ else:
 
 # Constants for detection
 SAVE_THRESHOLD = 0.75      # Threshold for saving images
-NOTIFY_THRESHOLD = 0.86   # Threshold for sending notifications
+NOTIFY_THRESHOLD = 0.87   # Threshold for sending notifications
 PEAK_DETECTION_THRESHOLD = 0.89  # Threshold for peak detection
 MAX_SCREENSHOTS = 2       # Number of screenshots to send per event - adjusted to 1
 COLLECTION_TIME = 50      # Maximum time to collect screenshots in seconds (increased to 60s)
@@ -415,7 +415,7 @@ try:
                                     send_path = original_path
                                 
                                 sound_indicator = "🔊" if play_sound else "🔇"
-                                message = f"{sound_indicator} Mounting detected met queu ({ts}) - Confidence: {conf:.2f}\n"
+                                message = f"{sound_indicator} Mounting detected ({ts}) - Confidence: {conf:.2f}\n"
                                 message += f"Stage: {stage} - Rank {rank+1}/{len(selected_indices)}\n"
                                 message += f"Event duration: {collection_duration:.1f}s\n"
                                 
@@ -490,3 +490,4 @@ finally:
     
     _send_telegram_message_sync(stop_message)
     print("Stop message sent to Telegram")
+
