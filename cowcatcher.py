@@ -313,7 +313,7 @@ try:
                         hist_timestamp = timestamp_history[i]
                         hist_conf = confidence_history[i]
                         
-                        hist_original_save_path = os.path.join(save_folder, f"mounting_detected{hist_timestamp}_conf{hist_conf:.2f}_history.jpg")
+                        hist_original_save_path = os.path.join(save_folder, f"mounting_detected_{hist_timestamp}_conf{hist_conf:.2f}_history.jpg")
                         cv2.imwrite(hist_original_save_path, hist_frame)
                         
                         hist_annotated_frame = hist_frame.copy()
@@ -490,4 +490,5 @@ finally:
     
     _send_telegram_message_sync(stop_message)
     print("Stop message sent to Telegram")
+
 
