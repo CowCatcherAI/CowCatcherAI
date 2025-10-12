@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CowCatcher AI - Statistics</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-4">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h1 class="text-center mb-0">📊 System Statistics</h1>
+                <p class="text-center">Real-time system performance</p>
+            </div>
+            
+            <div class="card-body">
+                {% if stats %}
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">💻 CPU Usage</h5>
+                                <div class="progress">
+                                    <div class="progress-bar bg-primary" role="progressbar" 
+                                         style="width: {{ stats.cpu_percent }}%">
+                                        {{ stats.cpu_percent }}%
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">🧠 Memory Usage</h5>
+                                <div class="progress">
+                                    <div class="progress-bar bg-success" role="progressbar" 
+                                         style="width: {{ stats.memory_percent }}%">
+                                        {{ stats.memory_percent }}%
+                                    </div>
+                                </div>
+                                <small class="text-muted">
+                                    {{ stats.memory_used_gb | round(2) }} GB / {{ stats.memory_total_gb | round(2) }} GB
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">💾 Disk Usage</h5>
+                                <div class="progress">
+                                    <div class="progress-bar bg-warning" role="progressbar" 
+                                         style="width: {{ stats.disk_percent }}%">
+                                        {{ stats.disk_percent }}%
+                                    </div>
+                                </div>
+                                <small class="text-muted">
+                                    {{ stats.disk_used_gb | round(2) }} GB / {{ stats.disk_total_gb | round(2) }} GB
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-danger">
+                    Error loading system statistics
+                </div>
+                {% endif %}
+                
+                <div class="text-center mt-4">
+                    <button onclick="location.reload()" class="btn btn-primary me-2">Refresh</button>
+                    <a href="/" class="btn btn-secondary">Back to Menu</a>
+                </div>
+            </div>
+        </div>
+    </div>    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

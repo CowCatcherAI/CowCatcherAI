@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CowCatcher AI - Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container d-flex align-items-center justify-content-center min-vh-100">
+        <div class="card shadow" style="max-width: 400px; width: 100%;">
+            <div class="card-body text-center">
+                <div class="display-1 mb-3">🐄</div>
+                <h1>CowCatcher AI</h1>
+                <p class="text-muted">Login to continue</p>
+                
+                {% if use_default %}
+                <div class="alert alert-warning" role="alert">
+                    <strong>⚠️ Warning:</strong> Using default credentials (admin/admin). Please set WEBUI_USERNAME and WEBUI_PASSWORD environment variables for security.
+                </div>
+                {% endif %}
+                
+                {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    Invalid username or password. Please try again.
+                </div>
+                {% endif %}
+                
+                <form method="POST" action="/login">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required autofocus>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

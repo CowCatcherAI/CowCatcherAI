@@ -18,13 +18,16 @@ CowCatcher AI is an open-source system that uses artificial intelligence to auto
 - **Open source** - fully customizable and transparent
 - **completely free software** one-time setup and lifetime usage
 - **affordable and scalable** for 1 calf pen or complete barn
+- **Easy deployment** with Docker - no complex installation needed
+- **Web UI** for easy configuration
 
 ## 🛠️ Requirements
 
 ### Bare minimum (for getting started)
-- **Standard computer**
+- **Docker** and Docker Compose installed
 - **any IP camera** with RTSP support
 - **Internet connection**
+- **AI Model file** (CowcatcherV14.pt or similar)
 
 ### Hardware (for best performance)
 - **Computer** with NVIDIA graphics card (€600-1000 for 1-4 cameras)
@@ -34,107 +37,53 @@ CowCatcher AI is an open-source system that uses artificial intelligence to auto
 - **Internet connection**
 - **Scalable** more cameras require more powerful computer
 
-### Software
-- Our Cowcatcher AI software
-- Anaconda Prompt
-- Sublime Text or Visual Studio Code 
-- WinRAR/7-Zip for extracting files
+## 🐳 Quick Start with Docker (Recommended)
 
-## 📥 Installation
+### Prerequisites
+1. Install [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/)
+2. Download or clone this repository: `git clone https://github.com/sjoerdvanderhoorn/CowCatcherAI.git`
 
-### First of All
-
-You can install this yourself by following the guide below, or contact me for assistance, i can also do the installation for free
-- **Email:** jacobsfarmsocial@gmail.com
-- **Telegram:** @Jacob5456
-
-For additional guidance, I've created video tutorials for the installation process. While they aren't completely up-to-date, they're quite helpful as the process is largely the same.
-
-**Video Playlist:**  
-https://www.youtube.com/playlist?list=PLAa1RFX0i2uCmmDactfR1bR208mwl6KY0
-
-### Step 1: Download Software
-1. Download and install [Anaconda](https://www.anaconda.com/products/distribution)
-2. Download and install [Sublime Text](https://www.sublimetext.com/) (optional)
-3. Download and install [WinRAR](https://www.win-rar.com/) or 7-Zip
-4. Download the latest release of [CowCatcherAI](https://github.com/CowCatcherAI/CowCatcherAI/releases)  
-   or with command: `git clone https://github.com/CowCatcherAI/CowCatcherAI.git`
-
-### Step 2: Prepare Project
-1. Extract the zip file to a folder of your choice (e.g., `C:\Users\username\Documents\Cowcatcherai`)
-2. Remember the path to this folder, you'll need to reference it constantly
-
-### Step 3: Set Up Python Environment
-
-Open **Anaconda Prompt** and execute the following commands:
+### Step 1: Start the Container
 
 ```bash
-# Navigate to your project drive (replace C: with your drive)
-C:
+# Navigate to the project directory
+cd CowCatcherAI
 
-# Go to your project folder
-cd \Users\username\Documents\Cowcatcher
-
-# Create a new conda environment
-conda create -n cowcatcher python=3.11
-
-# Confirm with 'y' when prompted
-y
-
-# Activate the environment
-conda activate cowcatcher
+# Start the container
+docker-compose up -d
 ```
 
-### Step 4: Install Required Packages
+### Step 2: Configure via Web UI
+
+1. Open your browser and navigate to `http://localhost:5000`
+2. **Login** with default credentials: username `admin`, password `admin`
+   - ⚠️ **Security Note**: For production use, set custom credentials via environment variables `WEBUI_USERNAME` and `WEBUI_PASSWORD` in `docker-compose.yml`
+3. Navigate to Settings
+4. Upload your AI model file (e.g., `CowcatcherV14.pt`)
+   - The model file is required for the detection system to work
+   - Contact the project maintainer if you need access to the model file
+4. Fill in your configuration:
+   - **Camera RTSP URL** (e.g., `rtsp://admin:password@192.168.1.100:554/h264Preview_01_sub`)
+   - **Telegram Bot Token** (get from @BotFather on Telegram)
+   - **Telegram Chat IDs** (get from @userinfobot, comma-separated)
+   - Adjust detection thresholds as needed
+5. Click **Save Configuration**
+
+Configuration changes take effect automatically - no restart needed!
+
+### Step 3: Monitor Logs
 
 ```bash
-# Install Ultralytics YOLO
-pip install ultralytics
+# View live logs
+docker-compose logs -f cowcatcher
+
+# Stop the container
+docker-compose down
 ```
 
-### Step 5: (Only for Nvidia graphic Cards) Check GPU Support
+### Data Persistence
 
-```bash
-# Install PyTorch with CUDA support
-pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
-
-# Start Python
-python
-
-# Test CUDA availability
-import torch
-torch.cuda.is_available()
-
-# Should return 'True' for GPU support
-# Exit Python
-exit()
-```
-
-### Step 6: Configure Batch File (Optional)
-Create or modify the provided batch file for easy startup. Update the variables according to your setup:
-
-```batch
-@echo off
-REM Configuration - modify these variables as needed
-REM To see version conda in anaconda prompt = echo %CONDA_PREFIX%
-set CONDA_PATH="C:\ProgramData\anaconda3\Scripts\activate.bat"
-set PROJECT_DRIVE=C:
-set PROJECT_FOLDER=CowCatcherAI
-set SCRIPT_NAME=cowcatcher.py
-
-REM Execute the script
-call %CONDA_PATH%
-%PROJECT_DRIVE%
-cd %PROJECT_FOLDER%
-python %SCRIPT_NAME%
-pause
-```
-
-**Customizable Variables:**
-- `CONDA_PATH`: Path to your Anaconda installation
-- `PROJECT_DRIVE`: Drive letter where your project is located
-- `PROJECT_FOLDER`: Name of your project folder
-- `SCRIPT_NAME`: Name of the main Python script
+All configuration and detection images are stored in the `./data` directory on your host machine, which persists across container restarts.
 
 ## 🤖 Setting Up Telegram Bot
 
@@ -150,42 +99,65 @@ pause
 2. Start a chat and send `/start`
 3. **Note your personal Telegram ID**
 
-### Step 3: Set Up Configuration
-Edit the `config.py` file in your project folder:
+### Step 3: Configure in Web UI
+Use the web interface at `http://localhost:5000` to enter your Telegram credentials.
 
-```python
-# Telegram configuration
-TELEGRAM_BOT_TOKEN = "YOUR_BOT_TOKEN_HERE"
-TELEGRAM_CHAT_ID = "YOUR_TELEGRAM_ID_HERE"
+## 🧑‍💻 Development with Docker
 
-# Camera configuration
-RTSP_URL_CAMERA1 = "rtsp://username:password@IP_ADDRESS:554/stream"
-```
+For development, you can use Docker with volume mounts to allow live code editing:
 
-## 🚀 Starting the System
-Use the configured .bat file, or follow these steps:
+### Prerequisites
+- Docker and Docker Compose installed
+- Code editor of your choice
+
+### Setup
 
 ```bash
-# Navigate to your project folder
-C:
+# Clone the repository
+git clone https://github.com/sjoerdvanderhoorn/CowCatcherAI.git
 cd CowCatcherAI
 
-# Start the detection program
-python cowcatcher.py
+# The docker-compose.yml already mounts ./data for persistence
+# For development, you can modify files directly in the repository
+# and rebuild the container to test changes
+
+# Build and start
+docker-compose up --build
+
+# To rebuild after code changes
+docker-compose up --build -d
+
+# View logs
+docker-compose logs -f
 ```
 
-Upon successful startup, you'll receive a confirmation message in Telegram.
+### Making Code Changes
 
-## ⚙️ Configuration Options
+1. Edit files in the repository
+2. Rebuild the container: `docker-compose up --build -d`
+3. Test your changes via the web UI or logs
 
-The system has various adjustable threshold values:
+### Running Without Docker (Advanced)
 
-- **SAVE_THRESHOLD** (0.7): Threshold for saving images
-- **NOTIFY_THRESHOLD** (0.85): Threshold for sending notifications
-- **PEAK_DETECTION_THRESHOLD** (0.90): Threshold for peak detection
-- **COOLDOWN_PERIOD** (40 seconds): Time between notifications
-- **MAX_SCREENSHOTS** (2): Number of photos per notification
-- **SOUND_EVERY_N_NOTIFICATIONS** Notification WITH sound every 5 messages
+For local development without Docker:
+
+```bash
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Create data directory
+mkdir -p data
+
+# Run the web UI
+python webui.py
+
+# In another terminal, run the detection system
+python cowcatcher_docker.py
+```
 
 ## 📁 Project Structure
 
@@ -193,17 +165,125 @@ The system has various adjustable threshold values:
 CowCatcherAI/
 ├── README.md
 ├── LICENSE
-├── CowcatcherVx.pt          # AI model file
-├── Cowcatcher.py            # Main program
-├── config.py                # Configuration file
-├── run_python_script.bat    # Run script
-└── mounting_detections/     # Folder for saved detections
+├── Dockerfile                    # Docker container definition
+├── docker-compose.yml            # Docker Compose configuration
+├── requirements.txt              # Python dependencies
+├── startup.sh                    # Container startup script
+├── cowcatcher/                   # Detection system
+│   ├── cowcatcher.py            # Main detection script
+│   └── config_loader.py         # Configuration loader
+├── webui/                        # Web interface
+│   ├── webui.py                 # Web UI application
+│   └── templates/               # Web UI templates
+│       ├── index.html           # Main menu page
+│       ├── login.html           # Login page
+│       ├── settings.html        # Settings page
+│       ├── detections.html      # Detections history page
+│       ├── live.html            # Live feed page
+│       ├── statistics.html      # System statistics page
+│       └── logs.html            # Log viewer page
+└── data/                         # Persistent data (config & detections)
+    ├── config.json              # Configuration file
+    ├── cowcatcher.log           # Application logs
+    └── mounting_detections/     # Saved detection images
 ```
+
+## ⚙️ Configuration Options
+
+All configuration is done through the web UI at `http://localhost:5000`. Available settings include:
+
+### Camera Settings
+- **Camera Name**: Friendly name shown in Telegram notifications
+- **RTSP URL**: Camera stream address
+- **Model Upload**: Upload AI model file directly via web UI
+- **Model Path**: AI model filename
+- **Developer Mode**: Enable testing with video files instead of live camera
+
+### Telegram Settings
+- **Bot Token**: Telegram bot API token
+- **Chat IDs**: Comma-separated list of recipient chat IDs
+
+### Detection Thresholds
+- **Save Threshold** (0.5-1.0): Minimum confidence to save images (default: 0.75)
+- **Notification Threshold** (0.5-1.0): Minimum confidence to send notifications (default: 0.86)
+- **Peak Detection Threshold** (0.5-1.0): Threshold for peak detection (default: 0.89)
+- **Min High Confidence Detections**: Required detections above notify threshold (default: 3)
+
+### Collection Settings
+- **Maximum Collection Time**: Maximum time to collect screenshots (default: 50s)
+- **Minimum Collection Time**: Minimum time to collect (default: 4s)
+- **Inactivity Stop Time**: Stop collection after inactivity (default: 6s)
+- **Cooldown Period**: Time between consecutive notifications (default: 40s)
+
+### Notification Settings
+- **Max Screenshots**: Number of photos per notification (default: 2)
+- **Sound Every N Notifications**: Play sound every N notifications (default: 5)
+- **Max Detections to Keep**: Maximum number of detection images to store (default: 500)
+- **Send Annotated Images**: Send images with bounding boxes (default: Yes)
+- **Show Live Feed**: Show live feed display (requires display, default: No)
 
 ## 📄 License
 
 This project uses the GNU Affero General Public License v3.0 (AGPL-3.0). It is based on Ultralytics YOLO and is fully open source.
 IMPORTANT NOTICE: This software/model is NOT authorized for commercial use or distribution.
+
+## 🐳 Docker Commands Reference
+
+```bash
+# Start the container in background
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Restart after configuration changes
+docker-compose restart
+
+# Stop the container
+docker-compose stop
+
+# Stop and remove container
+docker-compose down
+
+# Rebuild container after code changes
+docker-compose up -d --build
+
+# Check container status
+docker-compose ps
+
+# Access container shell for debugging
+docker-compose exec cowcatcher /bin/bash
+```
+
+## 🔧 Troubleshooting
+
+### Container won't start
+- Check Docker logs: `docker-compose logs cowcatcher`
+- Ensure port 5000 is not already in use
+- Verify the AI model file exists in the project directory
+
+### Can't connect to camera
+- Verify RTSP URL is correct
+- Test camera connection from host machine
+- Check network connectivity between container and camera
+- Ensure camera is on the same network or accessible
+
+### Telegram notifications not working
+- Verify bot token is correct
+- Check chat IDs are valid
+- Test bot with @BotFather
+- Check internet connectivity from container
+
+### Configuration not persisting
+- Ensure `./data` directory exists and is writable
+- Check volume mapping in docker-compose.yml
+- Restart container after configuration changes
+
+### Performance issues
+- Monitor CPU/GPU usage: `docker stats cowcatcher-ai`
+- Consider reducing detection frequency
+- Check camera stream resolution
+- For GPU support, use nvidia-docker runtime
 
 ## 🙏 Acknowledgments
 
