@@ -1,4 +1,5 @@
 @echo off
+title cowcatcher
 REM Configuration - modify these variables as needed
 REM To see version conda in anaconda prompt = echo %CONDA_PREFIX%
 set CONDA_PATH="C:\ProgramData\anaconda3\Scripts\activate.bat" 
