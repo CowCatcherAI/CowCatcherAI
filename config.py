@@ -17,7 +17,7 @@ MODEL_PATH = "CowcatcherVx.pt"
 # Telegram Bot Configuration
 TELEGRAM_BOT_TOKEN = "YOUR_BOT_TOKEN_HERE"  # Get from @BotFather on Telegram
 TELEGRAM_CHAT_IDS = [
-    123456789,          # Primary chat ID - Get ID from @userinfobot (example 0564732658)
+    1234567890,          # Primary chat ID - Get ID from @userinfobot (example 0564732658)
     # 987654321,        # Secondary chat ID (uncomment and replace with actual ID)
     # 111222333,        # Third chat ID (uncomment and replace with actual ID)
     # Add more chat IDs as needed
