@@ -155,6 +155,7 @@ class YoloAnnotationApp:
         
         self.root.bind("<o>", lambda event: self.skip_current())
         self.root.bind("<O>", lambda event: self.skip_current())
+        self.root.bind("<space>", lambda event: self.skip_current())
         
         self.root.bind("<t>", lambda event: self.toggle_drawing_mode())
         self.root.bind("<T>", lambda event: self.toggle_drawing_mode())
