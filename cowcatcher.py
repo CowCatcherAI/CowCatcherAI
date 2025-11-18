@@ -32,7 +32,6 @@ import os
 import time
 import requests
 from datetime import datetime
-import config
 from collections import deque
 from threading import Thread
 from queue import Queue
@@ -42,10 +41,10 @@ SHOW_LIVE_FEED = True
 SEND_ANNOTATED_IMAGES = True
 
 print("Script started. Loading YOLO model...")
-model = YOLO(config.MODEL_PATH, task='detect')
+model = YOLO("cowcatcherVx.pt", task='detect')
 print("YOLO model successfully loaded")
 
-rtsp_url_camera1 = config.RTSP_URL_CAMERA1
+rtsp_url_camera1 = "rtsp://admin:YourPassword123@192.168.178.21:554/h264Preview_01_sub"
 print(f"Connecting to camera: {rtsp_url_camera1}")
 
 # Folder for saving screenshots
@@ -57,8 +56,8 @@ else:
     print(f"Folder '{save_folder}' already exists")
 
 # Telegram configuration - MULTI-CHAT SUPPORT
-TELEGRAM_BOT_TOKEN = config.TELEGRAM_BOT_TOKEN
-TELEGRAM_CHAT_IDS = config.TELEGRAM_CHAT_IDS  
+TELEGRAM_BOT_TOKEN = "YOUR_BOT_TOKEN_HERE"
+TELEGRAM_CHAT_IDS = 1234567890  
 
 print(f"Telegram configured for {len(TELEGRAM_CHAT_IDS)} chat(s)")
 
