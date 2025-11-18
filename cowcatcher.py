@@ -57,7 +57,7 @@ else:
 
 # Telegram configuration - MULTI-CHAT SUPPORT
 TELEGRAM_BOT_TOKEN = "YOUR_BOT_TOKEN_HERE"
-TELEGRAM_CHAT_IDS = 1234567890  
+TELEGRAM_CHAT_IDS = [1234567890]  
 
 print(f"Telegram configured for {len(TELEGRAM_CHAT_IDS)} chat(s)")
 
@@ -489,5 +489,6 @@ finally:
     
     _send_telegram_message_sync(stop_message)
     print("Stop message sent to Telegram")
+
 
 
