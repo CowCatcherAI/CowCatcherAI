@@ -1,7 +1,7 @@
 """
 CowCatcher Script with Threading Optimization and Multi-Chat Support
 Copyright (C) 2025
-latest adjustment 9-october-2025
+latest adjustment 18-november-2025
 
 This program uses YOLOv12 from Ultralytics (https://github.com/ultralytics/ultralytics)
 and is licensed under the terms of the GNU Affero General Public License (AGPL-3.0).
@@ -31,21 +31,51 @@ import cv2
 import os
 import time
 import requests
+import json
 from datetime import datetime
 from collections import deque
 from threading import Thread
 from queue import Queue
 
-# Configuration for live screen display
-SHOW_LIVE_FEED = True
-SEND_ANNOTATED_IMAGES = True
+# Config laden
+with open('config.json') as f:
+    config = json.load(f)
+
+# Camera settings
+CAMERA_ID = "camera1"  # verander dit per script
+camera = next(c for c in config["cameras"] if c["id"] == CAMERA_ID)
+
+CAMERA_NAME = camera["name"]
+RTSP_URL = camera["rtsp_url"]
+SHOW_LIVE_FEED = camera["show_live_feed"]
+NOTIFY_THRESHOLD = camera["notify_threshold"]
+PEAK_DETECTION_THRESHOLD = camera["peak_detection_threshold"]
+SOUND_EVERY_N_NOTIFICATIONS = camera["sound_every_n_notifications"]
+
+model_path = json.load(open('config.json'))['global_settings']['model_path']
+SAVE_THRESHOLD = config["global_settings"]["save_threshold"]
+process_every_n_frames = config["global_settings"]["process_every_n_frames"]
+MIN_HIGH_CONFIDENCE_DETECTIONS = config["global_settings"]["min_high_confidence_detections"]
+MAX_SCREENSHOTS = config["global_settings"]["max_screenshots"]
+SEND_ANNOTATED_IMAGES = config["global_settings"]["send_annotated_images"]
+COLLECTION_TIME = config["global_settings"]["collection_time"]
+MIN_COLLECTION_TIME = config["global_settings"]["min_collection_time"]
+INACTIVITY_STOP_TIME = config["global_settings"]["inactivity_stop_time"]
+COOLDOWN_PERIOD = config["global_settings"]["cooldown_period"]
+
+# Telegram settings - PER CAMERA
+BOT_NAME = camera["telegram_bot"]  # Bot naam uit camera settings
+telegram_bots = config["telegram"]["bots"]
+TELEGRAM_BOT_TOKEN = next(b["token"] for b in telegram_bots if b["name"] == BOT_NAME and b["enabled"])
+
+telegram_users = config["telegram"]["users"]
+TELEGRAM_CHAT_IDS = [u["chat_id"] for u in telegram_users if u["enabled"]]
 
 print("Script started. Loading YOLO model...")
-model = YOLO("cowcatcherVx.pt", task='detect')
+model = YOLO(model_path, task='detect')
 print("YOLO model successfully loaded")
 
-rtsp_url_camera1 = "rtsp://admin:YourPassword123@192.168.178.21:554/h264Preview_01_sub"
-print(f"Connecting to camera: {rtsp_url_camera1}")
+print(f"Connecting to camera: {CAMERA_NAME}")
 
 # Folder for saving screenshots
 save_folder = "mounting_detections"
@@ -55,11 +85,7 @@ if not os.path.exists(save_folder):
 else:
     print(f"Folder '{save_folder}' already exists")
 
-# Telegram configuration - MULTI-CHAT SUPPORT
-TELEGRAM_BOT_TOKEN = "YOUR_BOT_TOKEN_HERE"
-TELEGRAM_CHAT_IDS = [1234567890]  
-
-print(f"Telegram configured for {len(TELEGRAM_CHAT_IDS)} chat(s)")
+print(f"Telegram bot '{BOT_NAME}' configured for {len(TELEGRAM_CHAT_IDS)} chat(s)")
 
 # THREADING SETUP FOR TELEGRAM
 telegram_queue = Queue()
@@ -193,7 +219,7 @@ print("Telegram worker thread started (async mode enabled)")
 
 # Open the camera stream
 print("Opening camera stream...")
-cap = cv2.VideoCapture(rtsp_url_camera1)
+cap = cv2.VideoCapture(RTSP_URL)
 if not cap.isOpened():
     print("ERROR: Cannot open camera stream")
     exit()
@@ -201,22 +227,10 @@ else:
     print("Camera stream successfully opened")
     print(f"Live display is {'enabled' if SHOW_LIVE_FEED else 'disabled'}")
 
-# Constants for detection
-SAVE_THRESHOLD = 0.75      # Threshold for saving images
-NOTIFY_THRESHOLD = 0.87   # Threshold for sending notifications
-PEAK_DETECTION_THRESHOLD = 0.89  # Threshold for peak detection
-MAX_SCREENSHOTS = 2       # Number of screenshots to send per event - adjusted to 1
-COLLECTION_TIME = 50      # Maximum time to collect screenshots in seconds (increased to 60s)
-MIN_COLLECTION_TIME = 4   # Minimum time to collect, even after peak detection
-INACTIVITY_STOP_TIME = 6  # Stops collecting after 6 seconds without detections above SAVE_THRESHOLD
-MIN_HIGH_CONFIDENCE_DETECTIONS = 3  # NEW: Minimum required detections above NOTIFY_THRESHOLD
 frame_count = 0
-process_every_n_frames = 2  # Process every 2 frames
 last_detection_time = None
-cooldown_period = 40  # Seconds between consecutive notifications
 
 notification_counter = 0
-SOUND_EVERY_N_NOTIFICATIONS = 5
 
 confidence_history = deque(maxlen=10)
 frame_history = deque(maxlen=10)
@@ -265,7 +279,7 @@ try:
             print("ERROR: Cannot read frame from camera")
             cap.release()
             time.sleep(5)
-            cap = cv2.VideoCapture(rtsp_url_camera1)
+            cap = cv2.VideoCapture(RTSP_URL)
             continue
             
         frame_count += 1
@@ -489,6 +503,5 @@ finally:
     
     _send_telegram_message_sync(stop_message)
     print("Stop message sent to Telegram")
-
 
 
