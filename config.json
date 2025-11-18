@@ -2,77 +2,76 @@
   "cameras": [
     {
       "id": "camera1",
-      "name": "Achtertuin",
-      "rtsp_url": "rtsp://admin:YourPassword123@192.168.178.21:554/h264Preview_01_sub"
+      "name": "first camera",
+      "rtsp_url": "rtsp://admin:YourPassword123@192.168.100.22:554/h264Preview_01_sub",
+      "enabled": true,
+      "show_live_feed": false,	
+      "notify_threshold": 0.87,
+      "peak_detection_threshold": 0.89,
+      "sound_every_n_notifications": 5,
+      "save_images": true,
+      "telegram_bot": "primairy bot"
     },
     {
       "id": "camera2",
-      "name": "Voortuin",
-      "rtsp_url": "rtsp://admin:YourPassword123@192.168.178.22:554/h264Preview_01_sub"
+      "name": "second camera",
+      "rtsp_url": "rtsp://admin:YourPassword123@192.168.100.22:554/h264Preview_01_sub",
+      "enabled": true,
+      "show_live_feed": false,
+      "notify_threshold": 0.87,
+      "peak_detection_threshold": 0.89,
+      "sound_every_n_notifications": 5,
+      "save_images": true,
+      "telegram_bot": "primairy bot"
     },
     {
       "id": "camera3",
       "name": "",
-      "rtsp_url": ""
-    },
-    {
-      "id": "camera4",
-      "name": "",
-      "rtsp_url": ""
-    },
-    {
-      "id": "camera5",
-      "name": "",
-      "rtsp_url": ""
-    },
-    {
-      "id": "camera6",
-      "name": "",
-      "rtsp_url": ""
-    },
-    {
-      "id": "camera7",
-      "name": "",
-      "rtsp_url": ""
-    },
-    {
-      "id": "camera8",
-      "name": "",
-      "rtsp_url": ""
-    },
-    {
-      "id": "camera9",
-      "name": "",
-      "rtsp_url": ""
-    },
-    {
-      "id": "camera10",
-      "name": "",
-      "rtsp_url": ""
+      "rtsp_url": "",
+      "enabled": false,
+      "show_live_feed": false,
+      "notify_threshold": 0.87,
+      "peak_detection_threshold": 0.89,
+      "sound_every_n_notifications": 5,
+      "save_images": false,
+      "telegram_bot": ""
     }
   ],
-  "model": {
-    "model_path": "CowcatcherVx.pt"
+  "global_settings": {
+    "model_path": "cowcatcherVx.pt",
+    "save_threshold": 0.75,
+    "process_every_n_frames": 2,
+    "min_high_confidence_detections": 3,
+    "max_screenshots": 2,
+    "send_annotated_images": true,
+    "collection_time": 50,
+    "min_collection_time": 4,
+    "inactivity_stop_time": 6,
+    "cooldown_period": 40
   },
   "telegram": {
     "bots": [
       {
-        "name": "Heifers",
-        "token": "First_BOT_TOKEN_HERE"
+        "name": "primairy bot",
+        "token": "YOUR_TELEGRAM_BOT_TOKEN_HERE",
+        "enabled": true
       },
       {
-        "name": "Milking cows",
-        "token": "SECOND_BOT_TOKEN_HERE"
+        "name": "secundairy Bot",
+        "token": "YOUR_TELEGRAM_BOT_TOKEN_HERE",
+        "enabled": false
       }
     ],
     "users": [
       {
         "name": "Jan de Boer",
-        "chat_id": 7707318000
+        "chat_id": 123456789,
+        "enabled": true
       },
       {
         "name": "Piet Jansen",
-        "chat_id": 987654321
+        "chat_id": 987654321,
+        "enabled": false
       }
     ]
   }
