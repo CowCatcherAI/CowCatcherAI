@@ -1,32 +1,79 @@
 {
-  "cameras": {
-    "camera1": {
+  "cameras": [
+    {
+      "id": "camera1",
+      "name": "Achtertuin",
       "rtsp_url": "rtsp://admin:YourPassword123@192.168.178.21:554/h264Preview_01_sub"
     },
-    "camera2": {
+    {
+      "id": "camera2",
+      "name": "Voortuin",
       "rtsp_url": "rtsp://admin:YourPassword123@192.168.178.22:554/h264Preview_01_sub"
     },
-    "camera3": { "rtsp_url": "" },
-    "camera4": { "rtsp_url": "" },
-    "camera5": { "rtsp_url": "" },
-    "camera6": { "rtsp_url": "" },
-    "camera7": { "rtsp_url": "" },
-    "camera8": { "rtsp_url": "" },
-    "camera9": { "rtsp_url": "" },
-    "camera10": { "rtsp_url": "" }
-  },
+    {
+      "id": "camera3",
+      "name": "",
+      "rtsp_url": ""
+    },
+    {
+      "id": "camera4",
+      "name": "",
+      "rtsp_url": ""
+    },
+    {
+      "id": "camera5",
+      "name": "",
+      "rtsp_url": ""
+    },
+    {
+      "id": "camera6",
+      "name": "",
+      "rtsp_url": ""
+    },
+    {
+      "id": "camera7",
+      "name": "",
+      "rtsp_url": ""
+    },
+    {
+      "id": "camera8",
+      "name": "",
+      "rtsp_url": ""
+    },
+    {
+      "id": "camera9",
+      "name": "",
+      "rtsp_url": ""
+    },
+    {
+      "id": "camera10",
+      "name": "",
+      "rtsp_url": ""
+    }
+  ],
   "model": {
     "model_path": "CowcatcherVx.pt"
   },
   "telegram": {
-    "bot_token": "YOUR_BOT_TOKEN_HERE",
-    "bot_token": "YOUR_BOT_TOKEN_HERE",
-    "bot_token": "YOUR_BOT_TOKEN_HERE",
-    "chat_ids": [
-      1234567890,
-      "",
-      "",
-      "",
-      ""
+    "bots": [
+      {
+        "name": "Heifers",
+        "token": "8380284781:AAG3boSm63OhCAyFdsup5KUXimC8GuYZeM4"
+      },
+      {
+        "name": "Milking cows",
+        "token": "SECOND_BOT_TOKEN_HERE"
+      }
+    ],
+    "users": [
+      {
+        "name": "Jan de Boer",
+        "chat_id": 7707317976
+      },
+      {
+        "name": "Piet Jansen",
+        "chat_id": 987654321
+      }
     ]
   }
+}
