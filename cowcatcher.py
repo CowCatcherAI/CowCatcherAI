@@ -53,7 +53,7 @@ NOTIFY_THRESHOLD = camera["notify_threshold"]
 PEAK_DETECTION_THRESHOLD = camera["peak_detection_threshold"]
 
 #global settings
-model_path = json.load(open('config.json'))['global_settings']['model_path']
+model_path = config['global_settings']['model_path']
 SOUND_EVERY_N_NOTIFICATIONS = config["global_settings"]["sound_every_n_notifications"]
 SAVE_THRESHOLD = config["global_settings"]["save_threshold"]
 process_every_n_frames = config["global_settings"]["process_every_n_frames"]
@@ -508,3 +508,4 @@ finally:
     
     _send_telegram_message_sync(stop_message)
     print("Stop message sent to Telegram")
+
