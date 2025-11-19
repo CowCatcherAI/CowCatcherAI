@@ -1,7 +1,7 @@
 """
 CowCatcher Script with Threading Optimization and Multi-Chat Support
 Copyright (C) 2025
-latest adjustment 18-november-2025
+latest adjustment 9-october-2025
 
 This program uses YOLOv12 from Ultralytics (https://github.com/ultralytics/ultralytics)
 and is licensed under the terms of the GNU Affero General Public License (AGPL-3.0).
@@ -45,14 +45,16 @@ with open('config.json') as f:
 CAMERA_ID = "camera1"  # verander dit per script
 camera = next(c for c in config["cameras"] if c["id"] == CAMERA_ID)
 
+#individual camera settings
 CAMERA_NAME = camera["name"]
 RTSP_URL = camera["rtsp_url"]
 SHOW_LIVE_FEED = camera["show_live_feed"]
 NOTIFY_THRESHOLD = camera["notify_threshold"]
 PEAK_DETECTION_THRESHOLD = camera["peak_detection_threshold"]
-SOUND_EVERY_N_NOTIFICATIONS = camera["sound_every_n_notifications"]
 
+#global settings
 model_path = json.load(open('config.json'))['global_settings']['model_path']
+SOUND_EVERY_N_NOTIFICATIONS = config["global_settings"]["sound_every_n_notifications"]
 SAVE_THRESHOLD = config["global_settings"]["save_threshold"]
 process_every_n_frames = config["global_settings"]["process_every_n_frames"]
 MIN_HIGH_CONFIDENCE_DETECTIONS = config["global_settings"]["min_high_confidence_detections"]
@@ -61,7 +63,7 @@ SEND_ANNOTATED_IMAGES = config["global_settings"]["send_annotated_images"]
 COLLECTION_TIME = config["global_settings"]["collection_time"]
 MIN_COLLECTION_TIME = config["global_settings"]["min_collection_time"]
 INACTIVITY_STOP_TIME = config["global_settings"]["inactivity_stop_time"]
-COOLDOWN_PERIOD = config["global_settings"]["cooldown_period"]
+cooldown_period = config["global_settings"]["cooldown_period"]
 
 # Telegram settings - PER CAMERA
 BOT_NAME = camera["telegram_bot"]  # Bot naam uit camera settings
@@ -71,14 +73,14 @@ TELEGRAM_BOT_TOKEN = next(b["token"] for b in telegram_bots if b["name"] == BOT_
 telegram_users = config["telegram"]["users"]
 TELEGRAM_CHAT_IDS = [u["chat_id"] for u in telegram_users if u["enabled"]]
 
-print("Script started. Loading YOLO model...")
+print("Starting CowCatcherAI. Loading detection model...")
 model = YOLO(model_path, task='detect')
-print("YOLO model successfully loaded")
+print("Detection model successfully loaded")
 
 print(f"Connecting to camera: {CAMERA_NAME}")
 
-# Folder for saving screenshots
-save_folder = "mounting_detections"
+#Folder for saving screenshots
+save_folder = f"mounting_detections_{CAMERA_ID}"
 if not os.path.exists(save_folder):
     os.makedirs(save_folder)
     print(f"Folder '{save_folder}' created")
@@ -225,7 +227,6 @@ if not cap.isOpened():
     exit()
 else:
     print("Camera stream successfully opened")
-    print(f"Live display is {'enabled' if SHOW_LIVE_FEED else 'disabled'}")
 
 frame_count = 0
 last_detection_time = None
@@ -255,6 +256,10 @@ print(f"Sound notification every {SOUND_EVERY_N_NOTIFICATIONS} alerts")
 
 start_message = f"📋 Cowcatcher detection script started at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n⚠️ DISCLAIMER: Use at your own risk. This program uses Ultralytics YOLO and is subject to the GNU Affero General Public License v3.0 (AGPL-3.0)."
 send_telegram_message(start_message)
+
+def format_timestamp_for_display(ts):
+    """Converteer YYYYMMDD naar DD-MM-YYYY formaat voor weergave"""
+    return f"{ts[6:8]}-{ts[4:6]}-{ts[:4]}"
 
 def detect_mounting_peak(confidence_history, frame_history, timestamp_history):
     """Detects the peak of a mounting event based on confidence score progression."""
@@ -428,10 +433,12 @@ try:
                                     send_path = original_path
                                 
                                 sound_indicator = "🔊" if play_sound else "🔇"
-                                message = f"{sound_indicator} Mounting detected ({ts}) - Confidence: {conf:.2f}\n"
+                                date_str = format_timestamp_for_display(ts)
+                                conf_str = f"{conf:.2f}".replace('.', ',')
+
+                                message = f"{sound_indicator} Mounting detected {date_str} - confidence: {conf_str}\n"
                                 message += f"Stage: {stage} - Rank {rank+1}/{len(selected_indices)}\n"
-                                message += f"Event duration: {collection_duration:.1f}s\n"
-                                
+                                                                
                                 send_telegram_photo(send_path, message, disable_notification=not play_sound)
                                 
                                 sound_status = "WITH sound" if play_sound else "without sound"
@@ -497,11 +504,7 @@ finally:
     
     stop_message = f"⚠️ WARNING: Cowcatcher detection script stopped at {stop_time}\n"
     stop_message += f"Reason: {stop_reason}\n"
-    stop_message += f"Total frames processed: {frame_count}\n"
-    stop_message += f"Notifications sent: {telegram_stats['sent']}\n"
     stop_message += f"Failed: {telegram_stats['failed']}"
     
     _send_telegram_message_sync(stop_message)
     print("Stop message sent to Telegram")
-
-
