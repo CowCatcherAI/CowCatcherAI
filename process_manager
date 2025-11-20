@@ -5,9 +5,6 @@ import os
 import signal
 from datetime import datetime
 
-# De naam van het script dat we daadwerkelijk draaien
-WORKER_SCRIPT = "cowcatcher_template.py"
-
 class ProcessManager:
     def __init__(self, log_callback=None):
         self.processes = {}  # cam_id -> subprocess Popen object
@@ -24,7 +21,21 @@ class ProcessManager:
             self.log(camera_id, "Camera draait al.")
             return
 
-        cmd = [sys.executable, WORKER_SCRIPT, camera_id]
+        if getattr(sys, 'frozen', False):
+            # We draaien als EXE (Standalone)
+            base_path = os.path.dirname(sys.executable)
+            worker_exe = os.path.join(base_path, "cowcatcher_worker.exe")
+            
+            # Check of de worker bestaat
+            if not os.path.exists(worker_exe):
+                self.log(camera_id, f"Fout: Worker niet gevonden op {worker_exe}")
+                return
+
+            cmd = [worker_exe, camera_id]
+        else:
+            # We draaien in Python (Development)
+            worker_script = "cowcatcher_template.py"
+            cmd = [sys.executable, worker_script, camera_id]
         
         # Start proces, pipe stdout en stderr zodat we het kunnen lezen
         # CREATE_NO_WINDOW zorgt dat er geen zwart schermpje opkomt (Windows only flag)
