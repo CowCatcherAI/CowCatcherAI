@@ -1,0 +1,91 @@
+import subprocess
+import sys
+import threading
+import os
+import signal
+from datetime import datetime
+
+# De naam van het script dat we daadwerkelijk draaien
+WORKER_SCRIPT = "cowcatcher_template.py"
+
+class ProcessManager:
+    def __init__(self, log_callback=None):
+        self.processes = {}  # cam_id -> subprocess Popen object
+        self.log_callback = log_callback # Functie om logs naar GUI te sturen
+
+    def log(self, cam_id, message):
+        if self.log_callback:
+            self.log_callback(cam_id, message)
+        else:
+            print(f"[{cam_id}] {message}")
+
+    def start_camera(self, camera_id):
+        if camera_id in self.processes and self.processes[camera_id].poll() is None:
+            self.log(camera_id, "Camera draait al.")
+            return
+
+        cmd = [sys.executable, WORKER_SCRIPT, camera_id]
+        
+        # Start proces, pipe stdout en stderr zodat we het kunnen lezen
+        # CREATE_NO_WINDOW zorgt dat er geen zwart schermpje opkomt (Windows only flag)
+        creation_flags = 0
+        if sys.platform == "win32":
+            creation_flags = subprocess.CREATE_NO_WINDOW
+
+        try:
+            process = subprocess.Popen(
+                cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                bufsize=1,
+                creationflags=creation_flags
+            )
+            self.processes[camera_id] = process
+            
+            # Start threads om output te lezen zonder de GUI te blokkeren
+            t_out = threading.Thread(target=self._read_output, args=(process, camera_id, "INFO"))
+            t_err = threading.Thread(target=self._read_output, args=(process, camera_id, "ERROR"))
+            t_out.daemon = True
+            t_err.daemon = True
+            t_out.start()
+            t_err.start()
+            
+            self.log(camera_id, "Proces gestart...")
+            
+        except Exception as e:
+            self.log(camera_id, f"Fout bij starten: {str(e)}")
+
+    def stop_camera(self, camera_id):
+        if camera_id in self.processes:
+            proc = self.processes[camera_id]
+            if proc.poll() is None:
+                self.log(camera_id, "Stoppen van proces...")
+                proc.terminate() # Probeer netjes te stoppen
+                try:
+                    proc.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    proc.kill() # Forceer stop
+            
+            del self.processes[camera_id]
+            self.log(camera_id, "Proces gestopt.")
+        else:
+            self.log(camera_id, "Geen actief proces gevonden.")
+
+    def stop_all(self):
+        ids = list(self.processes.keys())
+        for cam_id in ids:
+            self.stop_camera(cam_id)
+
+    def is_running(self, camera_id):
+        return camera_id in self.processes and self.processes[camera_id].poll() is None
+
+    def _read_output(self, process, cam_id, level):
+        """Interne loop die output regels leest zolang het proces draait"""
+        stream = process.stdout if level == "INFO" else process.stderr
+        for line in iter(stream.readline, ''):
+            if line:
+                self.log(cam_id, line.strip())
+            else:
+                break
+        stream.close()
