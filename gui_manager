@@ -1,0 +1,329 @@
+import customtkinter as ctk
+from tkinter import messagebox
+import uuid
+
+# Kleuren
+RAL_6002 = "#2D572C"  # Loofgroen
+COLOR_HOVER = "#3A6B39"
+COLOR_BG = "#1E1E1E"
+
+ctk.set_appearance_mode("Dark")
+ctk.set_default_color_theme("green")
+
+class CowCatcherGUI(ctk.CTkFrame):
+    def __init__(self, master, config_manager, process_manager):
+        super().__init__(master)
+        self.master = master
+        self.cfg = config_manager
+        self.pm = process_manager
+        
+        self.selected_camera_id = None
+        self.pack(fill="both", expand=True)
+
+        # Layout: Links Sidebar, Rechts Content
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+
+        self.create_sidebar()
+        self.create_main_area()
+        
+        # Laad initiële data
+        self.refresh_camera_list()
+
+    def create_sidebar(self):
+        self.sidebar = ctk.CTkFrame(self, width=200, corner_radius=0)
+        self.sidebar.grid(row=0, column=0, sticky="nsew")
+        self.sidebar.grid_rowconfigure(2, weight=1)
+
+        self.lbl_title = ctk.CTkLabel(self.sidebar, text="CowCatcher AI", font=ctk.CTkFont(size=20, weight="bold"))
+        self.lbl_title.grid(row=0, column=0, padx=20, pady=(20, 10))
+
+        self.btn_add_cam = ctk.CTkButton(self.sidebar, text="+ Nieuwe Camera", fg_color=RAL_6002, hover_color=COLOR_HOVER, command=self.add_new_camera)
+        self.btn_add_cam.grid(row=1, column=0, padx=20, pady=10)
+
+        # Lijst met cameras (scrollable)
+        self.scroll_cams = ctk.CTkScrollableFrame(self.sidebar, label_text="Camera's")
+        self.scroll_cams.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
+
+    def create_main_area(self):
+        self.main_tabs = ctk.CTkTabview(self, fg_color="transparent")
+        self.main_tabs.grid(row=0, column=1, padx=20, pady=20, sticky="nsew")
+
+        self.tab_cam = self.main_tabs.add("Camera Instellingen")
+        self.tab_global = self.main_tabs.add("Global Settings")
+        self.tab_tele = self.main_tabs.add("Telegram Config")
+        self.tab_logs = self.main_tabs.add("Status & Logs")
+
+        self.setup_camera_tab()
+        self.setup_global_tab()
+        self.setup_telegram_tab()
+        self.setup_log_tab()
+
+    # --- SIDEBAR LOGIC ---
+    def refresh_camera_list(self):
+        # Verwijder oude knoppen
+        for widget in self.scroll_cams.winfo_children():
+            widget.destroy()
+
+        cameras = self.cfg.get_cameras()
+        for cam in cameras:
+            status_color = "green" if self.pm.is_running(cam['id']) else "gray"
+            text = f"{cam.get('name', 'Naamloos')}\n({cam['id']})"
+            
+            btn = ctk.CTkButton(self.scroll_cams, text=text, 
+                                fg_color="transparent", border_width=1, border_color="gray",
+                                command=lambda cid=cam['id']: self.select_camera(cid))
+            btn.pack(fill="x", pady=2)
+
+            # Kleine indicator als het draait (visueel in button tekst of kleur)
+            if self.pm.is_running(cam['id']):
+                btn.configure(border_color=RAL_6002, text=f"▶ {text}")
+
+    def select_camera(self, cam_id):
+        self.selected_camera_id = cam_id
+        self.populate_camera_form(cam_id)
+        self.main_tabs.set("Camera Instellingen")
+        # Update log view header
+        self.log_box.insert("end", f"\n--- Geselecteerd: {cam_id} ---\n")
+        self.log_box.see("end")
+
+    def add_new_camera(self):
+        new_id = f"camera_{uuid.uuid4().hex[:6]}"
+        new_cam = {
+            "id": new_id,
+            "name": "Nieuwe Camera",
+            "rtsp_url": "rtsp://admin:pass@192.168.1.x:554/stream",
+            "enabled": True,
+            "show_live_feed": False,
+            "notify_threshold": 0.87,
+            "peak_detection_threshold": 0.89,
+            "save_images": True,
+            "telegram_bot": ""
+        }
+        self.cfg.update_camera(new_cam)
+        self.refresh_camera_list()
+        self.select_camera(new_id)
+
+    # --- TAB: CAMERA SETTINGS ---
+    def setup_camera_tab(self):
+        frame = self.tab_cam
+        frame.grid_columnconfigure(1, weight=1)
+
+        # Formulier velden
+        ctk.CTkLabel(frame, text="Camera Naam:").grid(row=0, column=0, padx=10, pady=5, sticky="w")
+        self.entry_name = ctk.CTkEntry(frame)
+        self.entry_name.grid(row=0, column=1, padx=10, pady=5, sticky="ew")
+
+        ctk.CTkLabel(frame, text="RTSP URL:").grid(row=1, column=0, padx=10, pady=5, sticky="w")
+        self.entry_url = ctk.CTkEntry(frame, placeholder_text="rtsp://user:pass@ip...")
+        self.entry_url.grid(row=1, column=1, padx=10, pady=5, sticky="ew")
+
+        ctk.CTkLabel(frame, text="Telegram Bot:").grid(row=2, column=0, padx=10, pady=5, sticky="w")
+        self.combo_bot = ctk.CTkComboBox(frame, values=["Geen"])
+        self.combo_bot.grid(row=2, column=1, padx=10, pady=5, sticky="ew")
+
+        # Sliders / Thresholds
+        ctk.CTkLabel(frame, text="Notify Threshold:").grid(row=3, column=0, padx=10, pady=5, sticky="w")
+        self.entry_notify = ctk.CTkEntry(frame)
+        self.entry_notify.grid(row=3, column=1, padx=10, pady=5, sticky="ew")
+        
+        ctk.CTkLabel(frame, text="Peak Threshold:").grid(row=4, column=0, padx=10, pady=5, sticky="w")
+        self.entry_peak = ctk.CTkEntry(frame)
+        self.entry_peak.grid(row=4, column=1, padx=10, pady=5, sticky="ew")
+
+        # Switches
+        self.var_enabled = ctk.BooleanVar()
+        self.switch_enabled = ctk.CTkSwitch(frame, text="Camera Ingeschakeld", variable=self.var_enabled, progress_color=RAL_6002)
+        self.switch_enabled.grid(row=5, column=0, columnspan=2, padx=10, pady=10, sticky="w")
+        
+        self.var_live = ctk.BooleanVar()
+        self.switch_live = ctk.CTkSwitch(frame, text="Show Live Feed (Popup)", variable=self.var_live, progress_color=RAL_6002)
+        self.switch_live.grid(row=6, column=0, columnspan=2, padx=10, pady=10, sticky="w")
+
+        # Save Button
+        self.btn_save_cam = ctk.CTkButton(frame, text="Instellingen Opslaan", fg_color=RAL_6002, command=self.save_current_camera)
+        self.btn_save_cam.grid(row=8, column=1, padx=10, pady=20, sticky="e")
+        
+        self.btn_del_cam = ctk.CTkButton(frame, text="Camera Verwijderen", fg_color="#8B0000", hover_color="#500000", command=self.delete_current_camera)
+        self.btn_del_cam.grid(row=8, column=0, padx=10, pady=20, sticky="w")
+
+    def populate_camera_form(self, cam_id):
+        cam = self.cfg.get_camera_by_id(cam_id)
+        if not cam: return
+
+        self.entry_name.delete(0, "end"); self.entry_name.insert(0, cam.get("name", ""))
+        self.entry_url.delete(0, "end"); self.entry_url.insert(0, cam.get("rtsp_url", ""))
+        self.entry_notify.delete(0, "end"); self.entry_notify.insert(0, str(cam.get("notify_threshold", 0.87)))
+        self.entry_peak.delete(0, "end"); self.entry_peak.insert(0, str(cam.get("peak_detection_threshold", 0.89)))
+        self.var_enabled.set(cam.get("enabled", True))
+        self.var_live.set(cam.get("show_live_feed", False))
+
+        # Bots updaten
+        bots = [b['name'] for b in self.cfg.get_telegram_bots()]
+        self.combo_bot.configure(values=bots if bots else ["Geen bots gevonden"])
+        if cam.get("telegram_bot") in bots:
+            self.combo_bot.set(cam.get("telegram_bot"))
+        elif bots:
+            self.combo_bot.set(bots[0])
+
+    def save_current_camera(self):
+        if not self.selected_camera_id: return
+        
+        try:
+            data = {
+                "id": self.selected_camera_id,
+                "name": self.entry_name.get(),
+                "rtsp_url": self.entry_url.get(),
+                "enabled": self.var_enabled.get(),
+                "show_live_feed": self.var_live.get(),
+                "notify_threshold": float(self.entry_notify.get()),
+                "peak_detection_threshold": float(self.entry_peak.get()),
+                "save_images": True, # Default true houden
+                "telegram_bot": self.combo_bot.get()
+            }
+            self.cfg.update_camera(data)
+            self.refresh_camera_list()
+            messagebox.showinfo("Succes", "Camera instellingen opgeslagen.")
+        except ValueError:
+            messagebox.showerror("Fout", "Controleer of de getallen (thresholds) correct zijn (punt in plaats van komma).")
+
+    def delete_current_camera(self):
+        if not self.selected_camera_id: return
+        if messagebox.askyesno("Bevestig", "Weet je zeker dat je deze camera wilt verwijderen?"):
+            self.cfg.delete_camera(self.selected_camera_id)
+            self.selected_camera_id = None
+            self.refresh_camera_list()
+
+    # --- TAB: GLOBAL SETTINGS ---
+    def setup_global_tab(self):
+        frame = self.tab_global
+        # Hier een Tekstveld voor de JSON of losse velden. 
+        # Voor eenvoud maak ik een Textbox waar je de global settings als JSON kunt editen.
+        # Dit is geavanceerd maar flexibel.
+        
+        ctk.CTkLabel(frame, text="Global Settings (JSON formaat):").pack(anchor="w", padx=10)
+        self.txt_global = ctk.CTkTextbox(frame, height=300)
+        self.txt_global.pack(fill="both", expand=True, padx=10, pady=10)
+        
+        btn = ctk.CTkButton(frame, text="Update Global Settings", fg_color=RAL_6002, command=self.save_global_settings)
+        btn.pack(pady=10)
+        
+        # Load data
+        self.load_global_settings_ui()
+
+    def load_global_settings_ui(self):
+        import json
+        settings = self.cfg.get_global_settings()
+        formatted = json.dumps(settings, indent=4)
+        self.txt_global.delete("0.0", "end")
+        self.txt_global.insert("0.0", formatted)
+
+    def save_global_settings(self):
+        import json
+        try:
+            text = self.txt_global.get("0.0", "end")
+            data = json.loads(text)
+            self.cfg.update_global_settings(data)
+            messagebox.showinfo("Succes", "Global settings opgeslagen.")
+        except Exception as e:
+            messagebox.showerror("JSON Fout", f"Ongeldige JSON: {e}")
+
+    # --- TAB: TELEGRAM ---
+    def setup_telegram_tab(self):
+        frame = self.tab_telegram_inner = ctk.CTkScrollableFrame(self.tab_tele)
+        self.tab_telegram_inner.pack(fill="both", expand=True)
+        
+        # Sectie Bots
+        ctk.CTkLabel(frame, text="Telegram Bots", font=ctk.CTkFont(weight="bold")).pack(anchor="w", pady=(10,5))
+        self.txt_bots = ctk.CTkTextbox(frame, height=150)
+        self.txt_bots.pack(fill="x", padx=5)
+        ctk.CTkLabel(frame, text="(Format: JSON list van bots)", font=ctk.CTkFont(size=10)).pack(anchor="w", padx=5)
+
+        # Sectie Users
+        ctk.CTkLabel(frame, text="Telegram Users", font=ctk.CTkFont(weight="bold")).pack(anchor="w", pady=(20,5))
+        self.txt_users = ctk.CTkTextbox(frame, height=150)
+        self.txt_users.pack(fill="x", padx=5)
+        ctk.CTkLabel(frame, text="(Format: JSON list van users)", font=ctk.CTkFont(size=10)).pack(anchor="w", padx=5)
+
+        btn = ctk.CTkButton(frame, text="Telegram Config Opslaan", fg_color=RAL_6002, command=self.save_telegram)
+        btn.pack(pady=20)
+        
+        self.load_telegram_ui()
+
+    def load_telegram_ui(self):
+        import json
+        bots = self.cfg.get_telegram_bots()
+        users = self.cfg.get_telegram_users()
+        
+        self.txt_bots.delete("0.0", "end")
+        self.txt_bots.insert("0.0", json.dumps(bots, indent=2))
+        
+        self.txt_users.delete("0.0", "end")
+        self.txt_users.insert("0.0", json.dumps(users, indent=2))
+
+    def save_telegram(self):
+        import json
+        try:
+            bots = json.loads(self.txt_bots.get("0.0", "end"))
+            users = json.loads(self.txt_users.get("0.0", "end"))
+            self.cfg.update_telegram_config(bots, users)
+            messagebox.showinfo("Succes", "Telegram config opgeslagen.")
+            
+            # Update camera form dropdown indien geopend
+            if self.selected_camera_id:
+                self.populate_camera_form(self.selected_camera_id)
+                
+        except Exception as e:
+            messagebox.showerror("Fout", f"JSON Parse error: {e}")
+
+    # --- TAB: STATUS & LOGS ---
+    def setup_log_tab(self):
+        frame = self.tab_logs
+        
+        # Control Buttons
+        ctrl_frame = ctk.CTkFrame(frame)
+        ctrl_frame.pack(fill="x", padx=10, pady=10)
+        
+        self.btn_start = ctk.CTkButton(ctrl_frame, text="Start Camera", fg_color="green", command=self.start_process)
+        self.btn_start.pack(side="left", padx=5)
+        
+        self.btn_stop = ctk.CTkButton(ctrl_frame, text="Stop Camera", fg_color="red", command=self.stop_process)
+        self.btn_stop.pack(side="left", padx=5)
+        
+        self.btn_stop_all = ctk.CTkButton(ctrl_frame, text="Stop ALLE Cameras", fg_color="#8B0000", command=self.stop_all_processes)
+        self.btn_stop_all.pack(side="right", padx=5)
+
+        # Log Box
+        self.log_box = ctk.CTkTextbox(frame, font=("Consolas", 12))
+        self.log_box.pack(fill="both", expand=True, padx=10, pady=10)
+        self.log_box.insert("0.0", "Systeem gereed. Selecteer een camera en druk op start.\n")
+
+    def append_log(self, cam_id, message):
+        """Callback functie aangeroepen vanuit process_manager thread"""
+        # Thread-safe GUI update (tkinter kan niet direct vanuit thread)
+        def _update():
+            # Alleen tonen als het relevant is voor iedereen of de geselecteerde camera
+            if self.selected_camera_id == cam_id or "SYSTEM" in str(cam_id):
+                timestamp = "" # Optioneel: datetime.now().strftime("%H:%M:%S")
+                self.log_box.insert("end", f"[{cam_id}] {message}\n")
+                self.log_box.see("end")
+        
+        self.master.after(0, _update)
+
+    def start_process(self):
+        if not self.selected_camera_id:
+            messagebox.showwarning("Let op", "Selecteer eerst een camera links.")
+            return
+        
+        self.pm.start_camera(self.selected_camera_id)
+        self.refresh_camera_list() # Update indicator
+
+    def stop_process(self):
+        if not self.selected_camera_id: return
+        self.pm.stop_camera(self.selected_camera_id)
+        self.refresh_camera_list()
+
+    def stop_all_processes(self):
+        if messagebox.askyesno("Stop Alles", "Weet je zeker dat je alle camera processen wilt stoppen?"):
+            self.pm.stop_all()
+            self.refresh_camera_list()
