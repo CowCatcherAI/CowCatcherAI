@@ -10,8 +10,13 @@ class ConfigManager:
         self.load_config()
 
     def load_config(self):
-        """Laad de configuratie of maak een nieuwe aan als deze niet bestaat."""
+        """
+        Laad de configuratie. 
+        Als config.json niet bestaat, wordt create_default_config() aangeroepen 
+        om deze aan te maken met de juiste standaardwaarden.
+        """
         if not os.path.exists(CONFIG_FILE):
+            print(f"'{CONFIG_FILE}' niet gevonden. Nieuw standaardbestand wordt aangemaakt...")
             self.create_default_config()
         
         try:
@@ -32,27 +37,84 @@ class ConfigManager:
             print(f"Fout bij opslaan config: {e}")
 
     def create_default_config(self):
-        """Maakt een standaard structuur aan (als fallback)."""
+        """Maakt de volledige standaardstructuur aan gebaseerd op jouw template."""
         default_data = {
-            "cameras": [],
-            "global_settings": {
-                "model_path": "cowcatcherVx.pt",
-                "save_threshold": 0.75,
-                "process_every_n_frames": 2,
-                "min_high_confidence_detections": 3,
-                "max_screenshots": 2,
-                "send_annotated_images": True,
-                "collection_time": 50,
-                "min_collection_time": 4,
-                "inactivity_stop_time": 6,
-                "sound_every_n_notifications": 5,
-                "cooldown_period": 40
+          "cameras": [
+            {
+              "id": "camera1",
+              "name": "first camera",
+              "rtsp_url": "rtsp://admin:YourPassword123@192.168.100.22:554/h264Preview_01_sub",
+              "enabled": True,
+              "show_live_feed": False,
+              "notify_threshold": 0.87,
+              "peak_detection_threshold": 0.89,
+              "save_images": True,
+              "telegram_bot": "primairy bot"
             },
-            "telegram": {
-                "bots": [],
-                "users": []
+            {
+              "id": "camera2",
+              "name": "second camera",
+              "rtsp_url": "rtsp://admin:YourPassword123@192.168.100.22:554/h264Preview_01_sub",
+              "enabled": True,
+              "show_live_feed": False,
+              "notify_threshold": 0.87,
+              "peak_detection_threshold": 0.89,
+              "save_images": True,
+              "telegram_bot": "primairy bot"
+            },
+            {
+              "id": "camera3",
+              "name": "",
+              "rtsp_url": "",
+              "enabled": False,
+              "show_live_feed": False,
+              "notify_threshold": 0.87,
+              "peak_detection_threshold": 0.89,
+              "save_images": False,
+              "telegram_bot": ""
             }
+          ],
+          "global_settings": {
+            "model_path": "cowcatcherVx.pt",
+            "save_threshold": 0.75,
+            "process_every_n_frames": 2,
+            "min_high_confidence_detections": 3,
+            "max_screenshots": 2,
+            "send_annotated_images": True,
+            "collection_time": 50,
+            "min_collection_time": 4,
+            "inactivity_stop_time": 6,
+            "sound_every_n_notifications": 5,
+            "cooldown_period": 40
+          },
+          "telegram": {
+            "bots": [
+              {
+                "name": "primairy bot",
+                "token": "YOUR_TELEGRAM_BOT_TOKEN_HERE",
+                "enabled": True
+              },
+              {
+                "name": "secundairy Bot",
+                "token": "YOUR_TELEGRAM_BOT_TOKEN_HERE",
+                "enabled": False
+              }
+            ],
+            "users": [
+              {
+                "name": "Jan de Boer",
+                "chat_id": 123456789,
+                "enabled": True
+              },
+              {
+                "name": "Piet Jansen",
+                "chat_id": 987654321,
+                "enabled": False
+              }
+            ]
+          }
         }
+        
         self.config = default_data
         self.save_config()
 
@@ -95,6 +157,8 @@ class ConfigManager:
         return self.config.get('telegram', {}).get('users', [])
 
     def update_telegram_config(self, bots, users):
+        if 'telegram' not in self.config:
+            self.config['telegram'] = {}
         self.config['telegram']['bots'] = bots
         self.config['telegram']['users'] = users
         self.save_config()
