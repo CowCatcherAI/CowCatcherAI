@@ -1,8 +1,17 @@
 import json
 import os
 import shutil
+import sys
 
-CONFIG_FILE = 'config.json'
+# Hulpfunctie om het pad van de exe te bepalen
+def get_base_path():
+    if getattr(sys, 'frozen', False):
+        # Als we als .exe draaien
+        return os.path.dirname(sys.executable)
+    # Als we als script draaien
+    return os.path.dirname(os.path.abspath(__file__))
+
+CONFIG_FILE = os.path.join(get_base_path(), 'config.json')
 
 class ConfigManager:
     def __init__(self):
@@ -75,7 +84,7 @@ class ConfigManager:
             }
           ],
           "global_settings": {
-            "model_path": "cowcatcherVx.pt",
+            "model_path": "cowcatcherV15.pt",
             "save_threshold": 0.75,
             "process_every_n_frames": 2,
             "min_high_confidence_detections": 3,
