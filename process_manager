@@ -35,10 +35,11 @@ class ProcessManager:
         else:
             # We draaien in Python (Development)
             worker_script = "cowcatcher_template.py"
-            cmd = [sys.executable, worker_script, camera_id]
+            # TOEVOEGING: '-u' zorgt voor unbuffered output (real-time terminal effect)
+            cmd = [sys.executable, '-u', worker_script, camera_id]
         
         # Start proces, pipe stdout en stderr zodat we het kunnen lezen
-        # CREATE_NO_WINDOW zorgt dat er geen zwart schermpje opkomt (Windows only flag)
+        # CREATE_NO_WINDOW zorgt dat er geen los zwart schermpje opkomt (Windows only)
         creation_flags = 0
         if sys.platform == "win32":
             creation_flags = subprocess.CREATE_NO_WINDOW
@@ -49,7 +50,7 @@ class ProcessManager:
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
-                bufsize=1,
+                bufsize=1, # Line buffered
                 creationflags=creation_flags
             )
             self.processes[camera_id] = process
@@ -62,7 +63,7 @@ class ProcessManager:
             t_out.start()
             t_err.start()
             
-            self.log(camera_id, "Proces gestart...")
+            self.log(camera_id, "Proces gestart (Terminal output gekoppeld)...")
             
         except Exception as e:
             self.log(camera_id, f"Fout bij starten: {str(e)}")
@@ -94,8 +95,10 @@ class ProcessManager:
     def _read_output(self, process, cam_id, level):
         """Interne loop die output regels leest zolang het proces draait"""
         stream = process.stdout if level == "INFO" else process.stderr
+        # Dit leest 'live' mee met wat de terminal normaal zou tonen
         for line in iter(stream.readline, ''):
             if line:
+                # .strip() haalt de enter weg, want de GUI log voegt die zelf weer toe
                 self.log(cam_id, line.strip())
             else:
                 break
