@@ -1,13 +1,14 @@
 import customtkinter as ctk
 from tkinter import messagebox
 import uuid
+from datetime import datetime
 
 # Kleuren
 RAL_6002 = "#2D572C"  # Loofgroen
 COLOR_HOVER = "#3A6B39"
 COLOR_BG = "#1E1E1E"
 
-ctk.set_appearance_mode("Dark")
+ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("green")
 
 class CowCatcherGUI(ctk.CTkFrame):
@@ -18,6 +19,9 @@ class CowCatcherGUI(ctk.CTkFrame):
         self.pm = process_manager
         
         self.selected_camera_id = None
+        # Dictionary om logs per camera op te slaan: {'cam_id': "regel1\nregel2\n"}
+        self.log_buffers = {} 
+        
         self.pack(fill="both", expand=True)
 
         # Layout: Links Sidebar, Rechts Content
@@ -31,7 +35,7 @@ class CowCatcherGUI(ctk.CTkFrame):
         self.refresh_camera_list()
 
     def create_sidebar(self):
-        self.sidebar = ctk.CTkFrame(self, width=200, corner_radius=0)
+        self.sidebar = ctk.CTkFrame(self, width=300, corner_radius=0)
         self.sidebar.grid(row=0, column=0, sticky="nsew")
         self.sidebar.grid_rowconfigure(2, weight=1)
 
@@ -49,15 +53,20 @@ class CowCatcherGUI(ctk.CTkFrame):
         self.main_tabs = ctk.CTkTabview(self, fg_color="transparent")
         self.main_tabs.grid(row=0, column=1, padx=20, pady=20, sticky="nsew")
 
+        # --- AANGEPASTE VOLGORDE ---
+        # 1. Instellingen
         self.tab_cam = self.main_tabs.add("Camera Instellingen")
-        self.tab_global = self.main_tabs.add("Global Settings")
-        self.tab_tele = self.main_tabs.add("Telegram Config")
+        # 2. Status & Logs (Nu specifiek voor de camera)
         self.tab_logs = self.main_tabs.add("Status & Logs")
+        # 3. Global
+        self.tab_global = self.main_tabs.add("Global Settings")
+        # 4. Telegram
+        self.tab_tele = self.main_tabs.add("Telegram Config")
 
         self.setup_camera_tab()
+        self.setup_log_tab()     # Setup voor de log tab
         self.setup_global_tab()
         self.setup_telegram_tab()
-        self.setup_log_tab()
 
     # --- SIDEBAR LOGIC ---
     def refresh_camera_list(self):
@@ -67,6 +76,10 @@ class CowCatcherGUI(ctk.CTkFrame):
 
         cameras = self.cfg.get_cameras()
         for cam in cameras:
+            # Zorg dat er een log buffer bestaat voor elke camera
+            if cam['id'] not in self.log_buffers:
+                self.log_buffers[cam['id']] = ""
+
             status_color = "green" if self.pm.is_running(cam['id']) else "gray"
             text = f"{cam.get('name', 'Naamloos')}\n({cam['id']})"
             
@@ -75,17 +88,25 @@ class CowCatcherGUI(ctk.CTkFrame):
                                 command=lambda cid=cam['id']: self.select_camera(cid))
             btn.pack(fill="x", pady=2)
 
-            # Kleine indicator als het draait (visueel in button tekst of kleur)
+            # Kleine indicator als het draait
             if self.pm.is_running(cam['id']):
                 btn.configure(border_color=RAL_6002, text=f"▶ {text}")
 
     def select_camera(self, cam_id):
         self.selected_camera_id = cam_id
+        
+        # 1. Vul het instellingen formulier
         self.populate_camera_form(cam_id)
-        self.main_tabs.set("Camera Instellingen")
-        # Update log view header
-        self.log_box.insert("end", f"\n--- Geselecteerd: {cam_id} ---\n")
-        self.log_box.see("end")
+        
+        # 2. Update de LOG tab met de geschiedenis van DEZE camera
+        self.update_log_view_for_selected()
+        
+        # Zet focus op instellingen (of laat staan waar hij stond als je dat liever hebt)
+        # self.main_tabs.set("Camera Instellingen") 
+        
+        # Update titel van de log tab buttons (optioneel, voor duidelijkheid)
+        self.btn_start.configure(text=f"Start {cam_id}")
+        self.btn_stop.configure(text=f"Stop {cam_id}")
 
     def add_new_camera(self):
         new_id = f"camera_{uuid.uuid4().hex[:6]}"
@@ -101,6 +122,7 @@ class CowCatcherGUI(ctk.CTkFrame):
             "telegram_bot": ""
         }
         self.cfg.update_camera(new_cam)
+        self.log_buffers[new_id] = "" # Init buffer
         self.refresh_camera_list()
         self.select_camera(new_id)
 
@@ -158,7 +180,6 @@ class CowCatcherGUI(ctk.CTkFrame):
         self.var_enabled.set(cam.get("enabled", True))
         self.var_live.set(cam.get("show_live_feed", False))
 
-        # Bots updaten
         bots = [b['name'] for b in self.cfg.get_telegram_bots()]
         self.combo_bot.configure(values=bots if bots else ["Geen bots gevonden"])
         if cam.get("telegram_bot") in bots:
@@ -178,7 +199,7 @@ class CowCatcherGUI(ctk.CTkFrame):
                 "show_live_feed": self.var_live.get(),
                 "notify_threshold": float(self.entry_notify.get()),
                 "peak_detection_threshold": float(self.entry_peak.get()),
-                "save_images": True, # Default true houden
+                "save_images": True,
                 "telegram_bot": self.combo_bot.get()
             }
             self.cfg.update_camera(data)
@@ -190,16 +211,96 @@ class CowCatcherGUI(ctk.CTkFrame):
     def delete_current_camera(self):
         if not self.selected_camera_id: return
         if messagebox.askyesno("Bevestig", "Weet je zeker dat je deze camera wilt verwijderen?"):
+            # Verwijder ook de log buffer
+            if self.selected_camera_id in self.log_buffers:
+                del self.log_buffers[self.selected_camera_id]
+                
             self.cfg.delete_camera(self.selected_camera_id)
             self.selected_camera_id = None
+            self.refresh_camera_list()
+            # Leeg de views
+            self.log_box.delete("0.0", "end")
+
+    # --- TAB: STATUS & LOGS (Specifiek per camera) ---
+    def setup_log_tab(self):
+        frame = self.tab_logs
+        
+        # Control Buttons - Nu specifiek voor de geselecteerde camera
+        ctrl_frame = ctk.CTkFrame(frame)
+        ctrl_frame.pack(fill="x", padx=10, pady=10)
+        
+        self.btn_start = ctk.CTkButton(ctrl_frame, text="Start Camera", fg_color="green", command=self.start_process)
+        self.btn_start.pack(side="left", padx=5)
+        
+        self.btn_stop = ctk.CTkButton(ctrl_frame, text="Stop Camera", fg_color="red", command=self.stop_process)
+        self.btn_stop.pack(side="left", padx=5)
+        
+        self.btn_stop_all = ctk.CTkButton(ctrl_frame, text="Stop ALLE Cameras", fg_color="#8B0000", command=self.stop_all_processes)
+        self.btn_stop_all.pack(side="right", padx=5)
+
+        # Log Box
+        self.log_box = ctk.CTkTextbox(frame, font=("Consolas", 12))
+        self.log_box.pack(fill="both", expand=True, padx=10, pady=10)
+        self.log_box.insert("0.0", "Selecteer een camera links om de status te zien.\n")
+
+    def update_log_view_for_selected(self):
+        """Ververst de text box met de buffer van de geselecteerde camera"""
+        self.log_box.delete("0.0", "end")
+        if self.selected_camera_id and self.selected_camera_id in self.log_buffers:
+            self.log_box.insert("0.0", self.log_buffers[self.selected_camera_id])
+        elif self.selected_camera_id:
+             self.log_box.insert("0.0", f"--- Log start voor {self.selected_camera_id} ---\n")
+        self.log_box.see("end")
+
+    def append_log(self, cam_id, message):
+        """Callback functie aangeroepen vanuit process_manager thread"""
+        # Thread-safe GUI update
+        def _update():
+            timestamp = datetime.now().strftime("%H:%M:%S")
+            log_line = f"[{timestamp}] {message}\n"
+            
+            # 1. Altijd opslaan in de buffer van de betreffende camera
+            if cam_id not in self.log_buffers:
+                self.log_buffers[cam_id] = ""
+            self.log_buffers[cam_id] += log_line
+            
+            # Houd buffer niet oneindig groot (optioneel, bijv max 1000 regels)
+            if len(self.log_buffers[cam_id]) > 50000: # grofweg karakters
+                self.log_buffers[cam_id] = self.log_buffers[cam_id][-40000:]
+
+            # 2. Als deze camera NU geselecteerd is in de GUI, update dan direct het scherm
+            if self.selected_camera_id == cam_id:
+                self.log_box.insert("end", log_line)
+                self.log_box.see("end")
+                
+            # 3. Als het een SYSTEM message is, toon het misschien overal of in een aparte buffer
+            if "SYSTEM" in str(cam_id) and self.selected_camera_id:
+                # Voeg toe aan huidige view ter info
+                self.log_box.insert("end", f"[SYSTEM] {message}\n")
+
+        self.master.after(0, _update)
+
+    def start_process(self):
+        if not self.selected_camera_id:
+            messagebox.showwarning("Let op", "Selecteer eerst een camera links.")
+            return
+        
+        self.pm.start_camera(self.selected_camera_id)
+        self.refresh_camera_list()
+
+    def stop_process(self):
+        if not self.selected_camera_id: return
+        self.pm.stop_camera(self.selected_camera_id)
+        self.refresh_camera_list()
+
+    def stop_all_processes(self):
+        if messagebox.askyesno("Stop Alles", "Weet je zeker dat je alle camera processen wilt stoppen?"):
+            self.pm.stop_all()
             self.refresh_camera_list()
 
     # --- TAB: GLOBAL SETTINGS ---
     def setup_global_tab(self):
         frame = self.tab_global
-        # Hier een Tekstveld voor de JSON of losse velden. 
-        # Voor eenvoud maak ik een Textbox waar je de global settings als JSON kunt editen.
-        # Dit is geavanceerd maar flexibel.
         
         ctk.CTkLabel(frame, text="Global Settings (JSON formaat):").pack(anchor="w", padx=10)
         self.txt_global = ctk.CTkTextbox(frame, height=300)
@@ -208,7 +309,6 @@ class CowCatcherGUI(ctk.CTkFrame):
         btn = ctk.CTkButton(frame, text="Update Global Settings", fg_color=RAL_6002, command=self.save_global_settings)
         btn.pack(pady=10)
         
-        # Load data
         self.load_global_settings_ui()
 
     def load_global_settings_ui(self):
@@ -269,61 +369,8 @@ class CowCatcherGUI(ctk.CTkFrame):
             self.cfg.update_telegram_config(bots, users)
             messagebox.showinfo("Succes", "Telegram config opgeslagen.")
             
-            # Update camera form dropdown indien geopend
             if self.selected_camera_id:
                 self.populate_camera_form(self.selected_camera_id)
                 
         except Exception as e:
             messagebox.showerror("Fout", f"JSON Parse error: {e}")
-
-    # --- TAB: STATUS & LOGS ---
-    def setup_log_tab(self):
-        frame = self.tab_logs
-        
-        # Control Buttons
-        ctrl_frame = ctk.CTkFrame(frame)
-        ctrl_frame.pack(fill="x", padx=10, pady=10)
-        
-        self.btn_start = ctk.CTkButton(ctrl_frame, text="Start Camera", fg_color="green", command=self.start_process)
-        self.btn_start.pack(side="left", padx=5)
-        
-        self.btn_stop = ctk.CTkButton(ctrl_frame, text="Stop Camera", fg_color="red", command=self.stop_process)
-        self.btn_stop.pack(side="left", padx=5)
-        
-        self.btn_stop_all = ctk.CTkButton(ctrl_frame, text="Stop ALLE Cameras", fg_color="#8B0000", command=self.stop_all_processes)
-        self.btn_stop_all.pack(side="right", padx=5)
-
-        # Log Box
-        self.log_box = ctk.CTkTextbox(frame, font=("Consolas", 12))
-        self.log_box.pack(fill="both", expand=True, padx=10, pady=10)
-        self.log_box.insert("0.0", "Systeem gereed. Selecteer een camera en druk op start.\n")
-
-    def append_log(self, cam_id, message):
-        """Callback functie aangeroepen vanuit process_manager thread"""
-        # Thread-safe GUI update (tkinter kan niet direct vanuit thread)
-        def _update():
-            # Alleen tonen als het relevant is voor iedereen of de geselecteerde camera
-            if self.selected_camera_id == cam_id or "SYSTEM" in str(cam_id):
-                timestamp = "" # Optioneel: datetime.now().strftime("%H:%M:%S")
-                self.log_box.insert("end", f"[{cam_id}] {message}\n")
-                self.log_box.see("end")
-        
-        self.master.after(0, _update)
-
-    def start_process(self):
-        if not self.selected_camera_id:
-            messagebox.showwarning("Let op", "Selecteer eerst een camera links.")
-            return
-        
-        self.pm.start_camera(self.selected_camera_id)
-        self.refresh_camera_list() # Update indicator
-
-    def stop_process(self):
-        if not self.selected_camera_id: return
-        self.pm.stop_camera(self.selected_camera_id)
-        self.refresh_camera_list()
-
-    def stop_all_processes(self):
-        if messagebox.askyesno("Stop Alles", "Weet je zeker dat je alle camera processen wilt stoppen?"):
-            self.pm.stop_all()
-            self.refresh_camera_list()
