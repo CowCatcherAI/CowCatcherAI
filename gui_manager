@@ -2,6 +2,7 @@ import customtkinter as ctk
 from tkinter import messagebox
 import uuid
 from datetime import datetime
+import json # Nodig voor de config tabs
 
 # Kleuren
 RAL_6002 = "#2D572C"  # Loofgroen
@@ -24,49 +25,172 @@ class CowCatcherGUI(ctk.CTkFrame):
         
         self.pack(fill="both", expand=True)
 
-        # Layout: Links Sidebar, Rechts Content
-        self.grid_columnconfigure(1, weight=1)
-        self.grid_rowconfigure(0, weight=1)
+        # Nieuwe Grid Layout:
+        # Rij 0: Top Bar (over 2 kolommen)
+        # Rij 1: Links (Sidebar) | Rechts (Content)
+        self.grid_columnconfigure(1, weight=1) 
+        self.grid_rowconfigure(0, weight=0)   
+        self.grid_rowconfigure(1, weight=1)   
 
-        self.create_sidebar()
-        self.create_main_area()
+        self.create_top_bar()
+        self.create_side_and_main_frames()
         
         # Laad initiële data
         self.refresh_camera_list()
+        
+        # Selecteer de eerste camera indien beschikbaar
+        if self.cfg.get_cameras():
+            self.select_camera(self.cfg.get_cameras()[0]['id'])
 
-    def create_sidebar(self):
-        self.sidebar = ctk.CTkFrame(self, width=300, corner_radius=0)
-        self.sidebar.grid(row=0, column=0, sticky="nsew")
-        self.sidebar.grid_rowconfigure(2, weight=1)
+    def create_top_bar(self):
+        """Creëert de bovenbalk met de titel en de hoofd-tabs."""
+        # Frame voor de bovenbalk (fg_color=RAL_6002 om de top bar groen te maken)
+        self.top_frame = ctk.CTkFrame(self, height=50, corner_radius=0, fg_color=RAL_6002)
+        self.top_frame.grid(row=0, column=0, columnspan=2, sticky="new")
+        self.top_frame.grid_columnconfigure(0, weight=1)
 
-        self.lbl_title = ctk.CTkLabel(self.sidebar, text="CowCatcher AI", font=ctk.CTkFont(size=20, weight="bold"))
-        self.lbl_title.grid(row=0, column=0, padx=20, pady=(20, 10))
+        # Titel links
+        self.lbl_title = ctk.CTkLabel(self.top_frame, text="CowCatcher AI", 
+                                      font=ctk.CTkFont(size=24, weight="bold"), 
+                                      text_color="white")
+        self.lbl_title.pack(side="left", padx=20, pady=5)
+        
+        # Hoofd Tabs rechts
+        self.main_tabs = ctk.CTkTabview(self.top_frame, height=40, width=400, 
+                                        fg_color=RAL_6002, command=self.on_main_tab_change)
+        self.main_tabs.pack(side="right", padx=10, pady=5)
+        
+        # Tabs aanmaken:
+        self.tab_overview = self.main_tabs.add("Overzicht Camera's")
+        self.tab_config = self.main_tabs.add("Configuratie")
+        
+        # Zorg dat de tabs er uitzien als knoppen in de top bar
+        self.main_tabs.configure(segmented_button_selected_color=COLOR_HOVER, 
+                                 segmented_button_selected_hover_color=COLOR_HOVER)
+        
+        self.main_tabs.set("Overzicht Camera's")
 
-        self.btn_add_cam = ctk.CTkButton(self.sidebar, text="+ Nieuwe Camera", fg_color=RAL_6002, hover_color=COLOR_HOVER, command=self.add_new_camera)
-        self.btn_add_cam.grid(row=1, column=0, padx=20, pady=10)
+    def create_side_and_main_frames(self):
+        """Creëert de containers voor de sidebar en de hoofdcontent (Rij 1)."""
+        # Zijbalk Container (Links)
+        self.sidebar_container = ctk.CTkFrame(self, width=300, corner_radius=0)
+        self.sidebar_container.grid(row=1, column=0, sticky="nsew")
+        self.sidebar_container.grid_rowconfigure(0, weight=1)
+
+        # Hoofd Content Container (Rechts)
+        self.main_content_container = ctk.CTkFrame(self, corner_radius=0, fg_color="transparent")
+        self.main_content_container.grid(row=1, column=1, sticky="nsew")
+        self.main_content_container.grid_rowconfigure(0, weight=1)
+        self.main_content_container.grid_columnconfigure(0, weight=1)
+        
+        # Roep de setup functies aan om de inhoud te creëren
+        self.setup_overview_section()
+        self.setup_config_section()
+        
+        # Begin met de 'Overzicht' sectie zichtbaar
+        self.overview_frame.pack(fill="both", expand=True)
+        self.config_frame.pack_forget()
+        self.sidebar_config.pack_forget()
+        self.sidebar_camera.pack(fill="both", expand=True)
+
+    def on_main_tab_change(self):
+        """Wordt aangeroepen als de gebruiker wisselt tussen 'Overzicht' en 'Configuratie'"""
+        current_tab = self.main_tabs.get()
+        
+        # Wissel de Grote Content Area
+        if current_tab == "Overzicht Camera's":
+            self.overview_frame.pack(fill="both", expand=True)
+            self.config_frame.pack_forget()
+            
+            # Wissel de Sidebar inhoud naar Camera Lijst
+            self.sidebar_config.pack_forget()
+            self.sidebar_camera.pack(fill="both", expand=True)
+            
+        elif current_tab == "Configuratie":
+            self.config_frame.pack(fill="both", expand=True)
+            self.overview_frame.pack_forget()
+            
+            # Wissel de Sidebar inhoud naar Config Navigatie
+            self.sidebar_camera.pack_forget()
+            self.sidebar_config.pack(fill="both", expand=True)
+            
+            # Zorg dat de Global settings UI geladen wordt bij de eerste switch
+            self.select_config_view("global")
+    
+    # --- SECTIE 1: OVERZICHT (Camera Lijst + Instellingen/Logs) ---
+    def setup_overview_section(self):
+        # Frame voor de inhoud van de Overzicht sectie
+        self.overview_frame = ctk.CTkFrame(self.main_content_container, fg_color="transparent")
+        
+        # --- Links: Camera Sidebar Inhoud ---
+        self.sidebar_camera = ctk.CTkFrame(self.sidebar_container, corner_radius=0)
+        self.sidebar_camera.grid_rowconfigure(2, weight=1)
+
+        ctk.CTkLabel(self.sidebar_camera, text="CAMERA'S", font=ctk.CTkFont(size=14, weight="bold")).grid(row=0, column=0, padx=20, pady=(20, 10))
+        self.btn_add_cam = ctk.CTkButton(self.sidebar_camera, text="+ Nieuwe Camera", fg_color=RAL_6002, hover_color=COLOR_HOVER, command=self.add_new_camera)
+        self.btn_add_cam.grid(row=1, column=0, padx=20, pady=10, sticky="ew")
 
         # Lijst met cameras (scrollable)
-        self.scroll_cams = ctk.CTkScrollableFrame(self.sidebar, label_text="Camera's")
+        self.scroll_cams = ctk.CTkScrollableFrame(self.sidebar_camera, label_text="")
         self.scroll_cams.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
+        
+        # --- Rechts: Tabs voor de geselecteerde Camera ---
+        self.cam_tabs = ctk.CTkTabview(self.overview_frame, fg_color="transparent")
+        self.cam_tabs.pack(fill="both", expand=True, padx=20, pady=20)
+        
+        self.tab_cam = self.cam_tabs.add("Camera Instellingen")
+        self.tab_logs = self.cam_tabs.add("Status & Logs")
+        
+        # Gebruik de bestaande setup functies, maar verwijs naar de nieuwe tabs
+        self.setup_camera_tab(self.tab_cam)
+        self.setup_log_tab(self.tab_logs)
 
-    def create_main_area(self):
-        self.main_tabs = ctk.CTkTabview(self, fg_color="transparent")
-        self.main_tabs.grid(row=0, column=1, padx=20, pady=20, sticky="nsew")
+    # --- SECTIE 2: CONFIGURATIE (Global/Telegram Navigatie + Formulieren) ---
+    def setup_config_section(self):
+        # Frame voor de inhoud van de Configuratie sectie
+        self.config_frame = ctk.CTkFrame(self.main_content_container, fg_color="transparent")
 
-        # --- AANGEPASTE VOLGORDE ---
-        # 1. Instellingen
-        self.tab_cam = self.main_tabs.add("Camera Instellingen")
-        # 2. Status & Logs (Nu specifiek voor de camera)
-        self.tab_logs = self.main_tabs.add("Status & Logs")
-        # 3. Global
-        self.tab_global = self.main_tabs.add("Global Settings")
-        # 4. Telegram
-        self.tab_tele = self.main_tabs.add("Telegram Config")
+        # --- Links: Configuratie Sidebar Inhoud ---
+        self.sidebar_config = ctk.CTkFrame(self.sidebar_container, corner_radius=0)
+        self.sidebar_config.grid_rowconfigure(2, weight=1)
+        
+        ctk.CTkLabel(self.sidebar_config, text="CONFIGURATIE", font=ctk.CTkFont(size=14, weight="bold")).grid(row=0, column=0, padx=20, pady=(20, 10), sticky="ew")
 
-        self.setup_camera_tab()
-        self.setup_log_tab()     # Setup voor de log tab
-        self.setup_global_tab()
-        self.setup_telegram_tab()
+        self.btn_global = ctk.CTkButton(self.sidebar_config, text="Global Settings", command=lambda: self.select_config_view("global"), fg_color="gray", hover_color=COLOR_HOVER)
+        self.btn_global.grid(row=1, column=0, padx=10, pady=(10, 5), sticky="ew")
+        
+        self.btn_telegram = ctk.CTkButton(self.sidebar_config, text="Telegram Config", command=lambda: self.select_config_view("telegram"), fg_color="transparent", hover_color=COLOR_HOVER)
+        self.btn_telegram.grid(row=2, column=0, padx=10, pady=5, sticky="ew")
+        
+        # --- Rechts: Container voor Global/Telegram formulieren ---
+        self.config_content = ctk.CTkFrame(self.config_frame, fg_color="transparent")
+        self.config_content.pack(fill="both", expand=True, padx=20, pady=20)
+
+        # De Global en Telegram formulieren worden hier direct in gepakt
+        self.tab_global = ctk.CTkFrame(self.config_content, fg_color="transparent")
+        self.tab_tele = ctk.CTkFrame(self.config_content, fg_color="transparent")
+        
+        # Gebruik de bestaande setup functies, maar verwijs naar de nieuwe frames
+        self.setup_global_tab(self.tab_global)
+        self.setup_telegram_tab(self.tab_tele)
+
+    def select_config_view(self, view_name):
+        """Wisselt tussen Global en Telegram settings en update de sidebar knoppen."""
+        self.tab_global.pack_forget()
+        self.tab_tele.pack_forget()
+
+        # Reset knop kleuren
+        self.btn_global.configure(fg_color="transparent")
+        self.btn_telegram.configure(fg_color="transparent")
+
+        if view_name == "global":
+            self.tab_global.pack(fill="both", expand=True)
+            self.load_global_settings_ui() 
+            self.btn_global.configure(fg_color="gray")
+        elif view_name == "telegram":
+            self.tab_tele.pack(fill="both", expand=True)
+            self.load_telegram_ui() 
+            self.btn_telegram.configure(fg_color="gray")
 
     # --- SIDEBAR LOGIC ---
     def refresh_camera_list(self):
@@ -80,7 +204,6 @@ class CowCatcherGUI(ctk.CTkFrame):
             if cam['id'] not in self.log_buffers:
                 self.log_buffers[cam['id']] = ""
 
-            status_color = "green" if self.pm.is_running(cam['id']) else "gray"
             text = f"{cam.get('name', 'Naamloos')}\n({cam['id']})"
             
             btn = ctk.CTkButton(self.scroll_cams, text=text, 
@@ -91,6 +214,10 @@ class CowCatcherGUI(ctk.CTkFrame):
             # Kleine indicator als het draait
             if self.pm.is_running(cam['id']):
                 btn.configure(border_color=RAL_6002, text=f"▶ {text}")
+            
+            # Markeer de geselecteerde camera
+            if cam['id'] == self.selected_camera_id:
+                btn.configure(fg_color=COLOR_HOVER, border_color=RAL_6002)
 
     def select_camera(self, cam_id):
         self.selected_camera_id = cam_id
@@ -101,10 +228,10 @@ class CowCatcherGUI(ctk.CTkFrame):
         # 2. Update de LOG tab met de geschiedenis van DEZE camera
         self.update_log_view_for_selected()
         
-        # Zet focus op instellingen (of laat staan waar hij stond als je dat liever hebt)
-        # self.main_tabs.set("Camera Instellingen") 
+        # 3. Update de sidebar om de selectie te markeren
+        self.refresh_camera_list()
         
-        # Update titel van de log tab buttons (optioneel, voor duidelijkheid)
+        # 4. Update titel van de log tab buttons
         self.btn_start.configure(text=f"Start {cam_id}")
         self.btn_stop.configure(text=f"Stop {cam_id}")
 
@@ -127,8 +254,7 @@ class CowCatcherGUI(ctk.CTkFrame):
         self.select_camera(new_id)
 
     # --- TAB: CAMERA SETTINGS ---
-    def setup_camera_tab(self):
-        frame = self.tab_cam
+    def setup_camera_tab(self, frame):
         frame.grid_columnconfigure(1, weight=1)
 
         # Formulier velden
@@ -182,10 +308,14 @@ class CowCatcherGUI(ctk.CTkFrame):
 
         bots = [b['name'] for b in self.cfg.get_telegram_bots()]
         self.combo_bot.configure(values=bots if bots else ["Geen bots gevonden"])
-        if cam.get("telegram_bot") in bots:
-            self.combo_bot.set(cam.get("telegram_bot"))
+        current_bot = cam.get("telegram_bot")
+        if current_bot in bots:
+            self.combo_bot.set(current_bot)
         elif bots:
             self.combo_bot.set(bots[0])
+        else:
+             self.combo_bot.set("Geen bots gevonden")
+
 
     def save_current_camera(self):
         if not self.selected_camera_id: return
@@ -200,7 +330,7 @@ class CowCatcherGUI(ctk.CTkFrame):
                 "notify_threshold": float(self.entry_notify.get()),
                 "peak_detection_threshold": float(self.entry_peak.get()),
                 "save_images": True,
-                "telegram_bot": self.combo_bot.get()
+                "telegram_bot": self.combo_bot.get() if self.combo_bot.get() != "Geen bots gevonden" else ""
             }
             self.cfg.update_camera(data)
             self.refresh_camera_list()
@@ -222,8 +352,7 @@ class CowCatcherGUI(ctk.CTkFrame):
             self.log_box.delete("0.0", "end")
 
     # --- TAB: STATUS & LOGS (Specifiek per camera) ---
-    def setup_log_tab(self):
-        frame = self.tab_logs
+    def setup_log_tab(self, frame):
         
         # Control Buttons - Nu specifiek voor de geselecteerde camera
         ctrl_frame = ctk.CTkFrame(frame)
@@ -269,14 +398,18 @@ class CowCatcherGUI(ctk.CTkFrame):
                 self.log_buffers[cam_id] = self.log_buffers[cam_id][-40000:]
 
             # 2. Als deze camera NU geselecteerd is in de GUI, update dan direct het scherm
-            if self.selected_camera_id == cam_id:
+            if self.selected_camera_id == cam_id and self.main_tabs.get() == "Overzicht Camera's":
                 self.log_box.insert("end", log_line)
                 self.log_box.see("end")
                 
             # 3. Als het een SYSTEM message is, toon het misschien overal of in een aparte buffer
-            if "SYSTEM" in str(cam_id) and self.selected_camera_id:
+            if "SYSTEM" in str(cam_id) and self.selected_camera_id and self.main_tabs.get() == "Overzicht Camera's":
                 # Voeg toe aan huidige view ter info
                 self.log_box.insert("end", f"[SYSTEM] {message}\n")
+            
+            # 4. Controleer op statusverandering
+            self.refresh_camera_list()
+
 
         self.master.after(0, _update)
 
@@ -298,28 +431,25 @@ class CowCatcherGUI(ctk.CTkFrame):
             self.pm.stop_all()
             self.refresh_camera_list()
 
-    # --- TAB: GLOBAL SETTINGS ---
-    def setup_global_tab(self):
-        frame = self.tab_global
+    # --- TAB: GLOBAL SETTINGS (in Config sectie) ---
+    def setup_global_tab(self, frame):
         
-        ctk.CTkLabel(frame, text="Global Settings (JSON formaat):").pack(anchor="w", padx=10)
-        self.txt_global = ctk.CTkTextbox(frame, height=300)
+        ctk.CTkLabel(frame, text="Global Settings (JSON formaat):", font=ctk.CTkFont(size=16, weight="bold")).pack(anchor="w", padx=10, pady=(0, 5))
+        self.txt_global = ctk.CTkTextbox(frame, height=300, font=("Consolas", 12))
         self.txt_global.pack(fill="both", expand=True, padx=10, pady=10)
         
         btn = ctk.CTkButton(frame, text="Update Global Settings", fg_color=RAL_6002, command=self.save_global_settings)
         btn.pack(pady=10)
         
-        self.load_global_settings_ui()
+        self.load_global_settings_ui() # Laad bij opstarten de data in dit verborgen frame
 
     def load_global_settings_ui(self):
-        import json
         settings = self.cfg.get_global_settings()
         formatted = json.dumps(settings, indent=4)
         self.txt_global.delete("0.0", "end")
         self.txt_global.insert("0.0", formatted)
 
     def save_global_settings(self):
-        import json
         try:
             text = self.txt_global.get("0.0", "end")
             data = json.loads(text)
@@ -328,30 +458,30 @@ class CowCatcherGUI(ctk.CTkFrame):
         except Exception as e:
             messagebox.showerror("JSON Fout", f"Ongeldige JSON: {e}")
 
-    # --- TAB: TELEGRAM ---
-    def setup_telegram_tab(self):
-        frame = self.tab_telegram_inner = ctk.CTkScrollableFrame(self.tab_tele)
-        self.tab_telegram_inner.pack(fill="both", expand=True)
+    # --- TAB: TELEGRAM (in Config sectie) ---
+    def setup_telegram_tab(self, frame):
+        # We maken een innerlijke scrollable frame voor de inhoud
+        inner_frame = ctk.CTkScrollableFrame(frame)
+        inner_frame.pack(fill="both", expand=True)
         
         # Sectie Bots
-        ctk.CTkLabel(frame, text="Telegram Bots", font=ctk.CTkFont(weight="bold")).pack(anchor="w", pady=(10,5))
-        self.txt_bots = ctk.CTkTextbox(frame, height=150)
+        ctk.CTkLabel(inner_frame, text="Telegram Bots", font=ctk.CTkFont(size=16, weight="bold")).pack(anchor="w", pady=(10,5), padx=5)
+        self.txt_bots = ctk.CTkTextbox(inner_frame, height=150, font=("Consolas", 12))
         self.txt_bots.pack(fill="x", padx=5)
-        ctk.CTkLabel(frame, text="(Format: JSON list van bots)", font=ctk.CTkFont(size=10)).pack(anchor="w", padx=5)
+        ctk.CTkLabel(inner_frame, text="(Format: JSON list van bots [{'name':'bot', 'token':'T', 'enabled':true}])", font=ctk.CTkFont(size=10)).pack(anchor="w", padx=5)
 
         # Sectie Users
-        ctk.CTkLabel(frame, text="Telegram Users", font=ctk.CTkFont(weight="bold")).pack(anchor="w", pady=(20,5))
-        self.txt_users = ctk.CTkTextbox(frame, height=150)
+        ctk.CTkLabel(inner_frame, text="Telegram Users", font=ctk.CTkFont(size=16, weight="bold")).pack(anchor="w", pady=(20,5), padx=5)
+        self.txt_users = ctk.CTkTextbox(inner_frame, height=150, font=("Consolas", 12))
         self.txt_users.pack(fill="x", padx=5)
-        ctk.CTkLabel(frame, text="(Format: JSON list van users)", font=ctk.CTkFont(size=10)).pack(anchor="w", padx=5)
+        ctk.CTkLabel(inner_frame, text="(Format: JSON list van users [{'name':'user', 'chat_id':1234, 'enabled':true}])", font=ctk.CTkFont(size=10)).pack(anchor="w", padx=5)
 
-        btn = ctk.CTkButton(frame, text="Telegram Config Opslaan", fg_color=RAL_6002, command=self.save_telegram)
+        btn = ctk.CTkButton(inner_frame, text="Telegram Config Opslaan", fg_color=RAL_6002, command=self.save_telegram)
         btn.pack(pady=20)
         
         self.load_telegram_ui()
 
     def load_telegram_ui(self):
-        import json
         bots = self.cfg.get_telegram_bots()
         users = self.cfg.get_telegram_users()
         
@@ -362,13 +492,13 @@ class CowCatcherGUI(ctk.CTkFrame):
         self.txt_users.insert("0.0", json.dumps(users, indent=2))
 
     def save_telegram(self):
-        import json
         try:
             bots = json.loads(self.txt_bots.get("0.0", "end"))
             users = json.loads(self.txt_users.get("0.0", "end"))
             self.cfg.update_telegram_config(bots, users)
             messagebox.showinfo("Succes", "Telegram config opgeslagen.")
             
+            # Ververs de combobox in de camera instellingen
             if self.selected_camera_id:
                 self.populate_camera_form(self.selected_camera_id)
                 
