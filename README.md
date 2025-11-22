@@ -43,8 +43,8 @@ CowCatcher AI is an open-source system that uses artificial intelligence to auto
 ### Step 1: Create Bot
 1. Open Telegram and search for `@BotFather`
 2. Start a chat and send `/newbot`
-3. Give your bot a name: "e.g.:" `Estrus Detection`
-4. Give your bot a username: `EstrusDetectionBot`
+3. Give your bot a name: "e.g.:" `cowcatcher`
+4. Give your bot a username: `cowcatcherBot`
 5. **Save the API token** you receive, NEVER share this token
 
 ### Step 2: Get Your User ID
