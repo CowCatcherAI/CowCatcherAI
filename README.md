@@ -52,17 +52,7 @@ CowCatcher AI is an open-source system that uses artificial intelligence to auto
 2. Start a chat and send `/start`
 3. **Note your personal Telegram ID**
 
-### Step 3: Set Up Configuration
-Edit the `config.py` file in your project folder:
-
-```python
-# Telegram configuration
-TELEGRAM_BOT_TOKEN = "YOUR_BOT_TOKEN_HERE"
-TELEGRAM_CHAT_ID = "YOUR_TELEGRAM_ID_HERE"
-
-# Camera configuration
-RTSP_URL_CAMERA1 = "rtsp://username:password@IP_ADDRESS:554/stream"
-```
+### software as .exe and dockers will later be edited, otherwise check the Interactive_GUI branch for working program
 
 ## 📄 License
 
