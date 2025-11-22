@@ -1,6 +1,0 @@
-ultralytics>=8.0.0
-opencv-python-headless>=4.8.0
-requests>=2.31.0
-flask>=3.0.0
-psutil>=5.9.0
-numpy>=1.21.0
