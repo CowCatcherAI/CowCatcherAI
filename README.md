@@ -102,10 +102,7 @@ services:
 
     volumes:
       - ./config.json:/app/config.json:ro
-
-      - type: bind
-        source: ./detections/
-        target: /app/detections
+      - ./detections:/app/detections
 
     deploy:
       resources:
