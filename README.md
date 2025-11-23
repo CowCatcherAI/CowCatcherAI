@@ -28,7 +28,7 @@ CowCatcher AI is an open-source system that uses artificial intelligence to auto
 - **Internet Connection**: For sending Telegram notifications.
 
 ### Software
-- **CowCatcher AI Executable**: Download from the [AI-Detector Releases](https://github.com/ESchouten/ai-detector/releases) page.
+- **CowCatcher AI Executable**: Download from the [AI Detector Releases](https://github.com/ESchouten/ai-detector/releases) page.
 - **Telegram App**: To receive notifications.
 
 ## 🚀 Getting Started
