@@ -47,7 +47,7 @@ To run the AI models in real-time, specific hardware is required.
 ### Hardware
 | Component | Requirement |
 | :--- | :--- |
-| **Graphics Card (GPU)** | **NVIDIA GTX 16-series or newer** (e.g., GTX 1650, 1660, RTX 3060). <br> *Note: Older cards (e.g., GTX 10-series) must use the Docker version.* |
+| **Graphics Card (GPU)** | **NVIDIA GTX 16-series or newer** (e.g., GTX 1660, RTX 2060, RTX 3060). <br> *Note: Older cards (e.g., GTX 10-series) must use the Docker version.* |
 | **Camera** | Any IP Camera with **RTSP support**. |
 | **Internet** | Required only for sending Telegram notifications. |
 
@@ -190,6 +190,9 @@ This usually means there is a syntax error in your `config.json`.
 **I am getting "Connection Failed" errors:**
 * Check that your computer is on the same network as the camera.
 * Verify your RTSP stream URL in a media player like VLC to ensure it works.
+
+**Frame detections are slow (200ms+):**
+* Verify that NVIDIA drivers are installed and up to date.
 
 ---
 
