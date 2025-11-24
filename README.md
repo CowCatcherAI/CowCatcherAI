@@ -46,6 +46,7 @@ CowCatcher AI is an open-source system that uses artificial intelligence to auto
 3. **Save your ID** (you will need this).
 
 ### Step 3: Download & Configure
+- to download the software from github you need to register an account, thats easy and free
 1. Download the latest `aidetector.exe` from the [Releases Page](https://github.com/ESchouten/ai-detector/releases).
 2. Create a file named `config.json` in the same folder with the following content:
 
