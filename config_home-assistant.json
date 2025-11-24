@@ -1,0 +1,27 @@
+    "detectors": [
+        {
+            "detection": {
+                "time_max": 50,
+                "timeout": 6,
+                "frames_min": 3,
+                "confidence": 0.7
+            },
+            "model": "https://github.com/CowCatcherAI/CowCatcherAI/releases/download/modelv-14/cowcatcherV15.pt",
+            "sources": [
+                "rtsp://admin:YourPassword123@192.168.100.22:554/h264Preview_01_sub",
+                "rtsp://admin:YourPassword123@192.168.100.22:554/h264Preview_01_sub",
+                "rtsp://admin:YourPassword123@192.168.100.22:554/h264Preview_01_sub"
+            ],
+            "exporters": {
+                "webhook": {
+                   "webhook_url" : "http://YOUR_HA_INSTANCE_IP:8123/api/webhook/YOUR_WEBHOOK_ID",
+                   "webhook_token": "YOUR_LONG_LIVED_ACCESS_TOKEN",
+                   "confidence": 0.90
+                },
+                "disk": {
+                    "directory": "mounts"
+                }
+            }
+        }
+    ]
+}
