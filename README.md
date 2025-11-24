@@ -67,7 +67,7 @@ CowCatcher AI is an open-source system that uses artificial intelligence to auto
                 "telegram": {
                     "token": "YOUR_BOT_TOKEN_HERE",
                     "chat": "YOUR_USER_ID_HERE",
-                    "confidence": 0.84
+                    "confidence": 0.87
                 },
                 "disk": {
                     "directory": "mounts"
