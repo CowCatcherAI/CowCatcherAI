@@ -2,7 +2,7 @@
 
 ### Automated Estrus Detection for Modern Dairy Farming
 
-**CowCatcher AI** is an open-source computer vision system designed to monitor your herd 24/7. By analyzing live footage from your barn cameras, it automatically detects "mounting" behavior—the primary sign of estrus (heat)—and instantly sends a photo notification to your smartphone via Telegram.
+**CowCatcher AI** is an open-source computer vision system designed to monitor your herd 24/7. By analyzing live footage from your barn cameras, it automatically detects "mounting" behavior—the primary sign of estrus (heat)—and instantly sends a photo notification to your smartphone via Telegram or combine it with your Home assistant setup.
 
 > **Powered by** [**eschouten/ai-detector**](https://github.com/eschouten/ai-detector)
 > This project utilizes the robust AI detection engine built by E. Schouten to run our custom-trained CowCatcher models.
@@ -15,10 +15,7 @@
 
 The system acts as a tireless digital herdsman. It processes video streams locally on your farm and only notifies you when action is required.
 
-1.  **📹 Barn Camera:** Captures live video via RTSP.
-2.  **🧠 AI Engine:** The computer analyzes every frame using the CowCatcher model.
-3.  **⚡ Detection:** The AI recognizes mounting behavior with high confidence.
-4.  **📲 Notification:** You receive a photo on Telegram immediately.
+📷 barn camera footage ──→ 🤖 AI Computer Vision ──→ ⚡ mounting detection ──→ 💽 save image ──→ 📲 Telegram notification with image
 
 ## ✨ Key Features
 
@@ -33,7 +30,7 @@ The system acts as a tireless digital herdsman. It processes video streams local
 ## 📹 Camera Setup & Best Practices
 **Crucial:** The AI is only as good as the video feed. For the best results:
 
-* **Height:** Mount cameras **3-4 meters high** to get a clear view over the cows' backs.
+* **Height:** Mount cameras **3-4 meters high** to get a clear view over the cows.
 * **Angle:** A downward angle (approx 45°) works best. Avoid flat, horizontal views where cows hide behind one another.
 * **Lighting:** Ensure the area is lit at night, or use a camera with strong IR (Night Vision).
 * **Coverage:** 1080p resolution is recommended. Avoid placing cameras facing directly into bright windows/sunlight.
@@ -48,7 +45,7 @@ To run the AI models in real-time, specific hardware is required.
 | Component | Requirement |
 | :--- | :--- |
 | **Graphics Card (GPU)** | **NVIDIA GTX 16-series or newer** (e.g., GTX 1660, RTX 2060, RTX 3060). <br> *Note: Older cards (e.g., GTX 10-series) must use the Docker version.* |
-| **Camera** | Any IP Camera with **RTSP support**. |
+| **Camera** | Any IP Camera with **RTSP support**. |Optimal is connect with Lan-cables, wifi cams do work but are noticable slower and do miss frames.
 | **Internet** | Required only for sending Telegram notifications. |
 
 ### Software
