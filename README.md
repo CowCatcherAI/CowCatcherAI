@@ -71,6 +71,8 @@ You need a "Bot" to send you messages.
 Download the latest `aidetector.exe` from the repository that powers this tool:
 👉 **[Download from AI Detector Releases](https://github.com/ESchouten/ai-detector/releases)**
 
+** link naar de uitleg video over de installatie https://youtu.be/MvbdJx7C3mM 
+
 ### Step 3: Configure the System
 1.  Create a new folder on your computer (e.g., `C:\CowCatcher`).
 2.  Move `aidetector.exe` into this folder.
