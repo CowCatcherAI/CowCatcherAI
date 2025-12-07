@@ -39,7 +39,7 @@ The system acts as a tireless digital herdsman. It processes video streams local
 
 ## 🛠️ System Requirements
 
-To run the AI models in real-time, specific hardware is required.
+Get started on any standard computer with up to 2 cameras. For those needing the full power of our real-time AI models, we recommend upgrading to specific hardware for optimal results.
 
 ### Hardware
 | Component | Requirement |
