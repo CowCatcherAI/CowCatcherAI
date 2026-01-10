@@ -45,9 +45,9 @@ Get started on any standard computer with up to 2 cameras. For those needing the
 ### Hardware
 
 | Component               | Requirement                                                                                                                     |
-| :---------------------- | :------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| :---------------------- | :------------------------------------------------------------------------------------------------------------------------------ |
 | **Graphics Card (GPU)** | **NVIDIA GTX 1000-series or newer** (e.g., GTX 1060, RTX 2060, RTX 3060). <br> _Note: Older cards must use the Docker version._ |
-| **Camera**              | Any IP Camera with **RTSP support**.                                                                                            | Optimal is connect with Lan-cables, wifi cams do work but are noticable slower and do miss frames. |
+| **Camera**              | Any IP Camera with **RTSP support**. Optimal is connect with Lan-cables                                                         |
 | **Internet**            | Required only for sending Telegram notifications.                                                                               |
 
 ### Software
