@@ -31,7 +31,7 @@ The system acts as a tireless digital herdsman. It processes video streams local
 
 **Crucial:** The AI is only as good as the video feed. For the best results:
 
-- **Height:** Mount cameras **3-4 meters high** to get a clear view over the cows.
+- **Height:** Mount cameras **4-5 meters high** to get a clear view over the cows if possible.
 - **Angle:** A downward angle (approx 45°) works best. Avoid flat, horizontal views where cows hide behind one another.
 - **Lighting:** Ensure the area is lit at night, or use a camera with strong IR (Night Vision).
 - **Coverage:** 1080p resolution is recommended. Avoid placing cameras facing directly into bright windows/sunlight.
