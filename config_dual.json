@@ -18,11 +18,13 @@
           {
             "token": "<your_bot_token>",
             "chat": "<your_chat_id>",
+            "alert_every": 5,
             "confidence": 0.87
           },
           {
             "token": "<your_bot_token>",
             "chat": "<your_chat_id>",
+            "alert_every": 5,
             "confidence": 0.87
           }
         ],
