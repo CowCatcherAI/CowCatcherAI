@@ -8,8 +8,8 @@
       },
       "yolo": {
         "model": "https://github.com/CowCatcherAI/CowCatcherAI/releases/download/modelv-14/cowcatcherV15.pt",
-        "confidence": 0.75,
-        "frames_min": 3,
+        "confidence": 0.85,
+        "frames_min": 5,
         "timeout": 6,
         "time_max": 50
       },
@@ -22,6 +22,7 @@
         "telegram": {
           "token": "<your_bot_token>",
           "chat": "<your_chat_id>"
+          "alert_every": 5
         },
         "disk": {
           "directory": "mounts"
