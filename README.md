@@ -78,7 +78,7 @@ Download the telegram app from the playstore
 Download the latest `aidetector.exe` from the repository that powers this tool:
 👉 **[Download from AI Detector Releases](https://github.com/ESchouten/ai-detector/releases)**
 
-\*\* link naar de uitleg video over de installatie https://youtu.be/MvbdJx7C3mM
+\*\* link naar de uitleg video over de installatie [https://youtu.be/MvbdJx7C3mM](https://youtu.be/Pf44ZvQtSYU)
 
 ### Step 3: Configure the System
 
