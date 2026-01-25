@@ -21,7 +21,7 @@
       "exporters": {
         "telegram": {
           "token": "<your_bot_token>",
-          "chat": "<your_chat_id>"
+          "chat": "<your_chat_id>",
           "alert_every": 5
         },
         "disk": {
