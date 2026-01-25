@@ -65,6 +65,7 @@ Follow these four steps to get up and running in minutes.
 
 You need a "Bot" to send you messages.
 
+Download the telegram app from the playstore
 1.  Open Telegram and search for **@BotFather**.
 2.  Send the message `/newbot`.
 3.  Follow the prompts to name it (e.g., `MyFarmAlertBot`).
