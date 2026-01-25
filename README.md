@@ -117,6 +117,44 @@ Download the latest `aidetector.exe` from the repository that powers this tool:
   ]
 }
 ```
+---
+
+<details>
+<summary><b>Click here to view RTSP urls for different camera's</b></summary>
+## 🎥 IP Camera RTSP URL Reference
+
+This table provides common RTSP stream endpoints for various camera brands. All examples assume the default username **`admin`** and port **`554`**.
+
+| Brand | Stream Type | Full RTSP URL Structure |
+| :--- | :--- | :--- |
+| **Reolink** | Main | `rtsp://admin:[PASS]@[IP]:554/h264Preview_01_main` |
+| | Sub | `rtsp://admin:[PASS]@[IP]:554/h264Preview_01_sub` |
+| **Dahua / Amcrest** | Main | `rtsp://admin:[PASS]@[IP]:554/cam/realmonitor?channel=1&subtype=0` |
+| | Sub | `rtsp://admin:[PASS]@[IP]:554/cam/realmonitor?channel=1&subtype=1` |
+| **Hikvision / Annke** | Main | `rtsp://admin:[PASS]@[IP]:554/Streaming/Channels/1` |
+| | Sub | `rtsp://admin:[PASS]@[IP]:554/Streaming/Channels/101` |
+| **Axis** | H.264 | `rtsp://admin:[PASS]@[IP]:554/axis-media/media.amp?videocodec=h264` |
+| **TP-Link Tapo** | Main | `rtsp://admin:[PASS]@[IP]:554/stream1` |
+| | Sub | `rtsp://admin:[PASS]@[IP]:554/stream2` |
+| **Foscam** | Main | `rtsp://admin:[PASS]@[IP]:554/videoMain` |
+| | Sub | `rtsp://admin:[PASS]@[IP]:554/videoSub` |
+| **Uniview** | Main | `rtsp://admin:[PASS]@[IP]:554/unicast/c1/s0/live` |
+| | Sub | `rtsp://admin:[PASS]@[IP]:554/unicast/c1/s2/live` |
+| **Zmodo** | Main | `rtsp://[IP]:554/videostream.cgi?loginuse=admin&loginpas=[PASS]` |
+| **D-Link** | Main | `rtsp://admin:[PASS]@[IP]:554/live1.sdp` |
+| **Eufy** | Main | `rtsp://admin:[PASS]@[IP]:554/flv?port=1935&app=bcs&stream=channel0_main.bcs` |
+| **Wyze** | Main | `rtsp://admin:[PASS]@[IP]:554/live` |
+| **Ctronic** | Main | `rtsp://admin:[PASS]@[IP]:554/11` |
+
+### 🛠️ Usage Instructions
+
+1. **Replace Placeholders:**
+   * `[IP]`: The local IP address of your camera (e.g., `192.168.178.50`).
+   * `[PASS]`: Your camera's access password.
+2. **enable RTSP / onvif:** for accesing the stream you need to enable RTSP / or Onvif in the camera brand application
+3. **Authentication:** Most cameras use Basic or Digest authentication. If the URL doesn't work in a browser, test it using **VLC Media Player** (*Open Network Stream*).
+
+---
 
 **Important Edits:**
 
@@ -189,18 +227,41 @@ To monitor multiple areas, you can add more detector blocks to your config.
 
 ```json
 {
-    "detectors": [
-        {
-            "detection": {
-                "source": ["rtsp://192.168.1.50/stream1", "rtsp://192.168.1.52/stream1"]
-            },
-            "yolo": {
-                "model": "...",
-                "confidence": 0.7
-            },
-            "exporters": { ... }
+  "detectors": [
+    {
+      "detection": {
+        "source": [
+          "rtsp://admin:YourPassword123@192.168.100.22:554/h264Preview_01_sub"
+        ]
+      },
+      "yolo": {
+        "model": "https://github.com/CowCatcherAI/CowCatcherAI/releases/download/modelv-14/cowcatcherV15.pt",
+        "confidence": 0.84,
+        "frames_min": 4,
+        "timeout": 6,
+        "time_max": 50
+      },
+      "exporters": {
+        "telegram": [
+          {
+            "token": "<your_bot_token>",
+            "chat": "<your_chat_id>",
+            "alert_every": 5,
+            "confidence": 0.87
+          },
+          {
+            "token": "<your_bot_token>",
+            "chat": "<your_chat_id>",
+            "alert_every": 5,
+            "confidence": 0.87
+          }
+        ],
+        "disk": {
+          "directory": "mounts"
         }
-    ]
+      }
+    }
+  ]
 }
 ```
 
