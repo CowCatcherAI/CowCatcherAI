@@ -154,6 +154,8 @@ This table provides common RTSP stream endpoints for various camera brands. All 
 2. **enable RTSP / onvif:** for accesing the stream you need to enable RTSP / or Onvif in the camera brand application
 3. **Authentication:** Most cameras use Basic or Digest authentication. If the URL doesn't work in a browser, test it using **VLC Media Player** (*Open Network Stream*).
 
+<details>
+
 ---
 
 **Important Edits:**
