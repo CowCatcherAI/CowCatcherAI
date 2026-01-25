@@ -153,8 +153,9 @@ This table provides common RTSP stream endpoints for various camera brands. All 
    * `[PASS]`: Your camera's access password.
 2. **enable RTSP / onvif:** for accesing the stream you need to enable RTSP / or Onvif in the camera brand application
 3. **Authentication:** Most cameras use Basic or Digest authentication. If the URL doesn't work in a browser, test it using **VLC Media Player** (*Open Network Stream*).
+4. **NVR users:** the IP address and password are usually the same for all cameras; only the stream path differs (e.g. /h264Preview_01_main, /h264Preview_02_main).
 
-<details>
+</details>
 
 ---
 
