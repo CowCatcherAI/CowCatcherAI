@@ -2,7 +2,7 @@
 
 ### Automated Estrus Detection for Modern Dairy Farming
 
-**CowCatcher AI** is an open-source computer vision system designed to monitor your herd 24/7. By analyzing live footage from your barn cameras, it automatically detects "mounting" behavior—the primary sign of estrus (heat)—and instantly sends a photo notification to your smartphone via Telegram or combine it with your Home assistant setup.
+**CowCatcher AI** is an informative open-source computer vision system designed to monitor your herd 24/7. By analyzing live footage from your barn cameras, it automatically detects "mounting" behavior—the primary sign of estrus (heat)—and instantly sends a photo notification to your smartphone via Telegram or combine it with your Home assistant setup.
 
 > **Powered by** [**eschouten/ai-detector**](https://github.com/eschouten/ai-detector)
 > This project utilizes the robust AI detection engine built by E. Schouten to run our custom-trained CowCatcher models.
@@ -20,7 +20,7 @@ The system acts as a tireless digital herdsman. It processes video streams local
 ## ✨ Key Features
 
 - **Easy Deployment:** No Python, Anaconda, or complex environments to install. Just download and run.
-- **24/7 Monitoring:** Never miss a heat, even during the night.
+- **24/7 Monitoring:** Never miss a Mounting, even during the night.
 - **Instant Alerts:** Get direct notifications with image proof sent to your phone.
 - **Data Privacy:** All video processing happens **locally** on your machine. No video is sent to the cloud.
 - **Cost Effective:** Free, open-source software. You only pay for your hardware.
