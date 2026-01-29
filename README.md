@@ -27,6 +27,11 @@ By combining the Cowcatcher model with the AI-detector, it acts as a tireless di
 
 ---
 
+🎯 The Goal: Research, Test, Learn
+
+We are shifting our focus. Instead of maintaining complex custom codebases, we are now fully dedicated to research, testing, and community learning. Learning from previously done researches regarding the subject. Our goal is not to write new software, but to understand how existing, powerful computer vision tools can be best applied in the stable. Here we provide the tools and data to replicate cowcatcher or build your own model.
+
+---
 ## 📹 Camera Setup & Best Practices
 
 **Crucial:** The AI is only as good as the video feed. For the best results:
