@@ -13,7 +13,7 @@
 
 ## ⚙️ How It Works
 
-Combining our Cowcatcher model with teh AI-detector it can sact as a tireless digital herdsman. Simply it processes video streams locally on your farm and only notifies you when action is required.
+By combining the Cowcatcher model with the AI-detector, it acts as a tireless digital herdsman. It processes video streams locally on your farm and only alerts you when action is required.
 
 📷 barn camera footage ──→ 🤖 AI Computer Vision ──→ ⚡ mounting detection ──→ 💽 save image ──→ 📲 Telegram notification with image
 
