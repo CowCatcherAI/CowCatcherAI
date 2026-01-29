@@ -1,6 +1,6 @@
 # 🐄 CowCatcher AI
 
-### Automated Estrus Detection for Modern Dairy Farming
+### Helping with Estrus Detection for Modern Dairy Farming
 
 **CowCatcher AI** is an informative open-source computer vision system designed to monitor your herd 24/7. By analyzing live footage from your barn cameras, it automatically detects "mounting" behavior—the primary sign of estrus (heat)—and instantly sends a photo notification to your smartphone via Telegram or combine it with your Home assistant setup.
 
@@ -13,7 +13,7 @@
 
 ## ⚙️ How It Works
 
-The system acts as a tireless digital herdsman. Simply it processes video streams locally on your farm and only notifies you when action is required.
+Combining our Cowcatcher model with teh AI-detector it can sact as a tireless digital herdsman. Simply it processes video streams locally on your farm and only notifies you when action is required.
 
 📷 barn camera footage ──→ 🤖 AI Computer Vision ──→ ⚡ mounting detection ──→ 💽 save image ──→ 📲 Telegram notification with image
 
@@ -148,6 +148,7 @@ This table provides common RTSP stream endpoints for various camera brands. All 
 | **Ctronic** | Main | `rtsp://admin:[PASS]@[IP]:554/11` |
 
 ### 🛠️ Usage Instructions
+We provide pre-filled config files in the main repo for easier integration between Cowcatcher and the AI-detector.
 
 1. **Replace Placeholders:**
    * `[IP]`: The local IP address of your camera (e.g., `192.168.178.50`).
@@ -336,5 +337,5 @@ Need help setting up your camera URL or tuning the AI? Join our community of far
 **Disclaimer:**
 
 > Use at your own risk. This software is intended as a supplementary tool and does not replace professional veterinary knowledge or human observation. The AI may generate false positives or negatives; the user remains responsible for all final breeding decisions.
->
+> To comply with licensing requirements, Cowcatcher solely provides the custom-trained Computer Vision model based on the YOLO framework. This model is intended for informational purposes only. Users are permitted to integrate the Cowcatcher model with third-party engines, such as AI-detector, the YOLOv5 MQTT protocol, or other commercial solutions.
 > Although this solution is designed to be an informative user-friendly and efficient, the underlying technology is not new. The computer vision used is based on YOLO, a proven technique that has been applied for years for object and motion detection. The Telegram notifications also use an existing API. Despite appearing innovative, it involves a smart combination of existing technologies.se positives or negatives; the user remains responsible for all final breeding decisions.
