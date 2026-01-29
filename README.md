@@ -339,18 +339,30 @@ Need help setting up your camera URL or tuning the AI? Join our community of far
 
 - **Notice:** This software/model is **NOT** authorized for commercial use or distribution without permission.
 
-### ⚠️ Disclaimer & Terms of Use
+## ⚠️ Disclaimer & Terms of Use
 
-**This software is provided "as is" without warranty of any kind.**
+> **Important:** This software is provided "as is" without warranty of any kind. By using this software, you agree to the terms outlined below.
 
-#### 1. Legal Warranty & Liability
-* **No Warranty:** This program is distributed in the hope that it will be useful, but **WITHOUT ANY WARRANTY**; without even the implied warranty of **MERCHANTABILITY** or **FITNESS FOR A PARTICULAR PURPOSE**. See the GNU Affero General Public License for more details.
-* **Limitation of Liability:** In no event, unless required by applicable law, shall any copyright holder be liable to you for damages, including any general, special, incidental, or consequential damages arising out of the use or inability to use the program (including but not limited to loss of data, loss of livestock, or professional errors).
+### 1. Legal Warranty & Liability
+* **No Warranty:** This program is distributed in the hope that it will be useful, but **WITHOUT ANY WARRANTY**; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. Refer to the [GNU Affero General Public License (AGPL-3.0)](LICENSE) for full details.
+* **Limitation of Liability:** To the maximum extent permitted by law, the authors/copyright holders shall not be liable for any damages (general, special, incidental, or consequential). This explicitly includes, but is not limited to: 
+    * Loss of data or business interruption.
+    * **Loss of livestock or veterinary costs.**
+    * Professional errors, even if advised of the possibility of such damage.
 
-#### 2. Professional & Veterinary Use
-> **Use at your own risk.** This software is intended as a supplementary tool and does not replace professional veterinary knowledge or direct human observation. Artificial Intelligence may generate false positives or negatives; the user remains solely and fully responsible for the deployment of this tool, all final breeding decisions, animal welfare, and any other actions or omissions resulting from its use.
+### 2. Professional & Veterinary Responsibility
+* **Decision Support Only:** This software is an informational tool and **not a replacement** for professional veterinary expertise or physical human inspection.
+* **AI Limitations:** Artificial Intelligence is inherently probabilistic. The user acknowledges that the system may produce false positives or negatives.
+* **User Responsibility:** The user remains solely responsible for animal welfare, breeding decisions, and any (in)action taken based on the software's output.
 
-#### 3. Technical Scope & Integrations
-* **Informational Purpose:** To comply with licensing requirements, Cowcatcher solely provides the custom-trained Computer Vision model based on the YOLO framework. This model is intended for informational purposes only.
-* **Third-Party Integration:** Users are permitted to integrate the Cowcatcher model with third-party engines, such as AI-detector, the YOLOv5 MQTT protocol, or other (commercial) solutions, provided they comply with the AGPL-3.0 terms.
-* **Proven Technology:** While this solution offers an efficient and user-friendly experience, the underlying technology is based on proven computervision technique used for years in object and motion detection. The system utilizes existing APIs (such as Telegram) to create a smart combination of established technologies. 
+### 3. Technical Nature & Integrations
+* **Scope:** Cowcatcher provides a custom Computer Vision model. Integration with third-party tools (e.g., YOLO, Telegram, MQTT) is at the user's own risk.
+* **No Guaranteed Uptime:** As the system relies on third-party APIs and local hardware, 100% reliability or real-time delivery of notifications cannot be guaranteed.
+* **Independent Implementation:** Reference to specific third-party technologies (YOLO, Telegram, MQTT) does not imply endorsement by the respective copyright holders.
+* **Compliance:** Users must ensure that any integration complies with the AGPL-3.0 terms.
+
+### 4. Indemnification
+You agree to indemnify, defend, and hold harmless the copyright holders and contributors from and against any and all claims, liabilities, damages, losses, or expenses (including reasonable attorneys' fees) arising out of or in any way connected with:
+1.  Your access to or use of the software.
+2.  Your violation of these terms or the AGPL-3.0 license.
+3.  Any third-party claims resulting from decisions made or actions taken based on the output of the Cowcatcher model (e.g., claims by farm owners, employees, or regulatory bodies).
