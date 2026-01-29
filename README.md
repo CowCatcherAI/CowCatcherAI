@@ -339,8 +339,18 @@ Need help setting up your camera URL or tuning the AI? Join our community of far
 
 - **Notice:** This software/model is **NOT** authorized for commercial use or distribution without permission.
 
-**Disclaimer:**
+### ⚠️ Disclaimer & Terms of Use
 
-> Use at your own risk. This software is intended as a supplementary tool and does not replace professional veterinary knowledge or human observation. The AI may generate false positives or negatives; the user remains responsible for all final breeding decisions.
-> To comply with licensing requirements, Cowcatcher solely provides the custom-trained Computer Vision model based on the YOLO framework. This model is intended for informational purposes only. Users are permitted to integrate the Cowcatcher model with third-party engines, such as AI-detector, the YOLOv5 MQTT protocol, or other commercial solutions.
-> Although this solution is designed to be an informative user-friendly and efficient, the underlying technology is not new. The computer vision used is based on YOLO, a proven technique that has been applied for years for object and motion detection. The Telegram notifications also use an existing API. Despite appearing innovative, it involves a smart combination of existing technologies.se positives or negatives; the user remains responsible for all final breeding decisions.
+**This software is provided "as is" without warranty of any kind.**
+
+#### 1. Legal Warranty & Liability
+* **No Warranty:** This program is distributed in the hope that it will be useful, but **WITHOUT ANY WARRANTY**; without even the implied warranty of **MERCHANTABILITY** or **FITNESS FOR A PARTICULAR PURPOSE**. See the GNU Affero General Public License for more details.
+* **Limitation of Liability:** In no event, unless required by applicable law, shall any copyright holder be liable to you for damages, including any general, special, incidental, or consequential damages arising out of the use or inability to use the program (including but not limited to loss of data, loss of livestock, or professional errors).
+
+#### 2. Professional & Veterinary Use
+> **Use at your own risk.** This software is intended as a supplementary tool and does not replace professional veterinary knowledge or direct human observation. Artificial Intelligence may generate false positives or negatives; the user remains solely and fully responsible for the deployment of this tool, all final breeding decisions, animal welfare, and any other actions or omissions resulting from its use.
+
+#### 3. Technical Scope & Integrations
+* **Informational Purpose:** To comply with licensing requirements, Cowcatcher solely provides the custom-trained Computer Vision model based on the YOLO framework. This model is intended for informational purposes only.
+* **Third-Party Integration:** Users are permitted to integrate the Cowcatcher model with third-party engines, such as AI-detector, the YOLOv5 MQTT protocol, or other (commercial) solutions, provided they comply with the AGPL-3.0 terms.
+* **Proven Technology:** While this solution offers an efficient and user-friendly experience, the underlying technology is based on YOLO proven technique used for years in object and motion detection. The system utilizes existing APIs (such as Telegram) to create a smart combination of established technologies. The end user is always responsible for any action
