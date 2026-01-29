@@ -1,23 +1,29 @@
-# CowCatcher AI 🐄📱
+# CowCatcher AI: Open Source & DIY 🐄💻
 
-An automatic "Heat detection system" that monitors cows 24/7 and sends direct notifications via Telegram (messaging app) when "mounting"behavior is detected.
+> **Welcome to the development branch!** Here you find exactly how it works. Here you can find the exact customized codes for the trained Cowcatcher model.
 
-## 📋 Overview
+## 🎯 The Goal: Research, Test, Learn
+We are shifting our focus. Instead of maintaining complex custom codebases, we are now fully dedicated to **research, testing, and community learning**. Learning from previously done researches regarding the subject. 
+Our goal is not to write new software, but to understand how existing, powerful computer vision tools can be best applied in the stable. Here we provide the tools and data to replicate cowcatcher or build your own model.
 
-CowCatcher AI is an open-source system that uses artificial intelligence to automatically recognize when a cow displays estrus behavior (mounting other cows). The system analyzes live camera footage and sends direct photos with notifications to your phone via Telegram.
+---
 
-![readme file afbeelding](https://github.com/user-attachments/assets/cee1e5f5-f9ae-4241-b8ad-8a9313b4a70c)
+## 🛠️ Based on the YOLO Standard
+We don't reinvent the wheel. Everything here is based on the official **Ultralytics YOLO Train Settings**. It’s the gold standard for computer vision, and we use it to keep things transparent and easy to follow.
 
-📷 barn camera footage ──→ 🤖 AI Computer Vision ──→ ⚡ *mounting* detection ──→ 💽 save image ──→ 📲 Telegram notification with image
+* **How we did it:** We took the standard YOLO framework and tuned it specifically for the stable—handling things like low light, dusty cameras, and identifying that specific mounting behavior.
+* **Reproduction:** Every setting we used (epochs, image size, etc.) is right here in the code. If you run these scripts, you get the same CowCatcher results we do.
 
-### Key Features
-- **24/7 monitoring** of live camera footage
-- **Automatic detection** of in heat behavior with AI
-- **Direct notifications** via Telegram with photos
-- **Local and secure** – your data stays on your farm
-- **Open source** - fully customizable and transparent
-- **completely free software** one-time setup and lifetime usage
-- **affordable and scalable** for 1 calf pen or complete barn
+---
+
+## 🏗️ Build or Replicate
+Want to see if it actually works? Or maybe you want to train a "Local" model for your own specific cows?
+
+1.  **Replicate:** Run our scripts to see exactly how we trained the model for mounting detection.
+2.  **Customize:** Swap in your own footage to make a model that knows your barn inside out.
+3.  **Validate:** Use the built-in YOLO tools to check the accuracy before you let it loose in the barn.
+
+> **Bottom line:** We’re providing the blueprint. Whether you're here for research or run your model trained on your own data, the tools are yours.
 
 ## 🛠️ Requirements
 
