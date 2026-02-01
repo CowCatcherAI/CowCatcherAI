@@ -1,1 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CowCatcher AI | open source project</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        
+        @page { 
+            size: A4; 
+            margin: 0; 
+        }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #e5e7eb; 
+            margin: 0;
+            padding: 20px;
+            -webkit-print-color-adjust: exact;
+        }
 
+        .a4-page {
+            width: 210mm;
+            height: 297mm;
+            margin: auto;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            padding: 30px 60px 70px 60px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: -60px;
+            padding: 0 60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #f0fdf4;
+        }
+
+        .img-gallery img {
+            height: 140px;
+            object-fit: cover;
+            border-radius: 12px;
+            width: 100%;
+            border: 3px solid white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        @media print {
+            body { background: none; padding: 0; }
+            .a4-page { box-shadow: none; margin: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="a4-page">
+    <div class="hero-section text-white pt-10">
+        <div class="absolute top-8 right-[60px]">
+            <a href="https://github.com/CowCatcherAI/CowCatcherAI" 
+               class="bg-white/95 text-green-900 px-3 py-0.5 rounded-md shadow-sm flex items-center gap-2 hover:bg-white transition-colors border border-white/20">
+                <i class="fab fa-github text-sm"></i>
+                <span class="text-[10px] font-bold tracking-tight uppercase">github.com/CowCatcherAI/CowCatcherAI</span>
+            </a>
+        </div>
+
+        <div class="mb-4"></div> 
+        
+        <h1 class="text-5xl font-extrabold mb-2 tracking-tight">CowCatcher AI</h1>
+        <p class="text-xl text-green-100 max-w-lg leading-relaxed">
+            Computer vision enables automated "mounting" detection for 24/7 herd monitoring.
+        </p>
+    </div>
+
+    <div class="feature-grid">
+        <div class="card flex items-start gap-4">
+            <div class="bg-green-100 p-3 rounded-lg text-green-700">
+                <i class="fas fa-users fa-lg"></i>
+            </div>
+            <div>
+                <h4 class="font-bold text-gray-800">Community Driven</h4>
+                <p class="text-xs text-gray-500 mt-1">
+                    As farmers, we train and test the vision model on real-world barn data to accurately detect mounting behavior.
+                </p>
+            </div>
+        </div>
+        <div class="card flex items-start gap-4">
+            <div class="bg-blue-100 p-3 rounded-lg text-blue-700"><i class="fas fa-lock fa-lg"></i></div>
+            <div>
+                <h4 class="font-bold text-gray-800">Local Privacy</h4>
+                <p class="text-xs text-gray-500 mt-1">Runs locally. Your data never leaves your farm. </p>
+            </div>
+        </div>
+        <div class="card flex items-start gap-4">
+            <div class="bg-orange-100 p-3 rounded-lg text-orange-700"><i class="fas fa-bolt fa-lg"></i></div>
+            <div>
+                <h4 class="font-bold text-gray-800">Instant Telegram Alerts</h4>
+                <p class="text-xs text-gray-500 mt-1">Receive photo and video insights on your phone the moment mounting is detected.</p>
+            </div>
+        </div>
+        <div class="card flex items-start gap-4">
+            <div class="bg-purple-100 p-3 rounded-lg text-purple-700"><i class="fas fa-microchip fa-lg"></i></div>
+            <div>
+                <h4 class="font-bold text-gray-800">Low Cost</h4>
+                <p class="text-xs text-gray-500 mt-1">Open-source software designed to run on affordable consumer hardware.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="px-[60px] mt-6 grid grid-cols-12 gap-8">
+        <div class="col-span-7">
+            <h3 class="text-xl font-bold text-green-900 mb-4 flex items-center">
+                <span class="w-8 h-1 bg-green-600 inline-block mr-2"></span>
+                How It Works
+            </h3>
+            <div class="space-y-4">
+                <div class="flex items-start gap-4 group">
+                    <span class="w-8 h-8 rounded-full bg-green-800 text-white flex items-center justify-center font-bold text-sm shrink-0">1</span>
+                    <p class="text-sm text-gray-700 pt-1"><strong>Engine:</strong> We use a versatile open-source AI detector for its broad capabilities.</p>
+                </div>
+                <div class="flex items-start gap-4 group">
+                    <span class="w-8 h-8 rounded-full bg-green-800 text-white flex items-center justify-center font-bold text-sm shrink-0">2</span>
+                    <p class="text-sm text-gray-700 pt-1"><strong>Stream:</strong> Connect your existing IP/wifi cameras.</p>
+                </div>
+                <div class="flex items-start gap-4">
+                    <span class="w-8 h-8 rounded-full bg-green-800 text-white flex items-center justify-center font-bold text-sm shrink-0">3</span>
+                    <p class="text-sm text-gray-700 pt-1"><strong>Analyze:</strong> AI detects "Mounting" & "Standing" behaviors.</p>
+                </div>
+                <div class="flex items-start gap-4">
+                    <span class="w-8 h-8 rounded-full bg-green-800 text-white flex items-center justify-center font-bold text-sm shrink-0">4</span>
+                    <p class="text-sm text-gray-700 pt-1"><strong>Notify:</strong> Telegram Bot sends the image and video to your private group chat.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-span-5 flex flex-col justify-center">
+            <div class="relative">
+                <div class="absolute -top-4 -right-4 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg z-10 animate-pulse">LIVE ALERT</div>
+                <img src="telegram.png" alt="Telegram Notification" class="w-full rounded-2xl shadow-2xl border-4 border-white">
+            </div>
+        </div>
+    </div>
+
+    <div class="px-[60px] mt-8">
+        <div class="bg-gray-50 p-5 rounded-xl border border-gray-200">
+            <h4 class="font-bold text-sm text-gray-800 mb-3 uppercase tracking-wider"></h4>
+            <div class="grid grid-cols-3 gap-4 img-gallery">
+                <img src="1.jpg" alt="Cam 1" style="object-position: bottom;">
+                <img src="2.jpg" alt="Cam 2" style="object-position: center;">
+                <img src="3.jpg" alt="Cam 3" style="object-position: 80% 60%;">
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-auto px-[60px] pb-10">
+        <div class="grid grid-cols-3 gap-6 pt-6 border-t border-gray-100">
+            <div>
+                <h5 class="font-bold text-green-900 text-xs mb-2 uppercase">Requirements (recommended)</h5>
+                <ul class="text-[10px] text-gray-600 space-y-1">
+                    <li><i class="fas fa-check text-green-500 mr-1"></i> NVIDIA GTX 1050 or better</li>
+                    <li><i class="fas fa-check text-green-500 mr-1"></i> Standard IP-Cameras</li>
+                    <li><i class="fas fa-check text-green-500 mr-1"></i> Internet over cable </li>
+                </ul>
+            </div>
+
+            <div>
+                <h5 class="font-bold text-green-900 text-xs mb-2 uppercase">Quick Start</h5>
+                <p class="text-[10px] text-gray-600">
+                    Download 
+                    <a href="https://github.com/ESchouten/ai-detector" target="_blank" rel="noopener noreferrer" class="text-green-600 hover:underline font-medium">
+                        <code>aidetector.exe</code>
+                    </a> 
+                    from GitHub, Enter your details and run, Cowcatcher model downloads automatically upon startup
+                </p>
+            </div>
+
+            <div class="flex flex-col items-center justify-center bg-green-900 text-white rounded-xl p-4">
+                <p class="text-[10px] mb-2 font-semibold text-center">
+                    Join the Community <br> 
+                    cowcatcher ai | open source project
+                </p>
+                <div class="flex gap-4 text-lg">
+                    <a href="https://github.com/CowCatcherAI/CowCatcherAI" target="_blank" rel="noopener noreferrer" class="hover:text-green-400 transition-colors">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    
+                    <a href="https://www.facebook.com/groups/1765616710830233" target="_blank" rel="noopener noreferrer" class="hover:text-green-400 transition-colors">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+
+                    <a href="https://web.telegram.org/a/#-1003640103247" target="_blank" rel="noopener noreferrer" class="hover:text-green-400 transition-colors">
+                        <i class="fab fa-telegram"></i>
+                    </a>
+
+                    <a href="https://cowcatcherai.com" target="_blank" rel="noopener noreferrer" class="hover:text-green-400 transition-colors">
+                        <i class="fas fa-globe"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <p class="mt-6 text-[9px] text-gray-400 text-center italic leading-tight">
+            CowCatcher AI is open-source software licensed under AGPL-3.0 and built on the Ultralytics framework. Provided "as is" without warranty of any kind.
+        </p>
+    </div>
+</div>
+
+</body>
+</html>
