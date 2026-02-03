@@ -31,7 +31,7 @@ By combining the Cowcatcher model with the AI-detector, it acts as a tireless di
 Curious to see the Computer Vision model in action? You can test the model directly in your browser without installing anything.
 
 Don't just take our word for it—see the results for yourself! 🌟
-[![Open in Spaces](https://huggingface.co/datasets/huggingface/badges/raw/main/open-in-hf-spaces-lg.svg)](https://huggingface.co/spaces/CowcatcherAI/CowCatcherAI)
+https://huggingface.co/spaces/CowcatcherAI/CowCatcherAI
 
 ---
 
