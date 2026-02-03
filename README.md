@@ -30,9 +30,11 @@ By combining the Cowcatcher model with the AI-detector, it acts as a tireless di
 
 Curious to see the Computer Vision model in action? You can test the model directly in your browser without installing anything.
 
-Check out the demo to test with our examples or verify the results using your own pictures:
-https://huggingface.co/spaces/CowcatcherAI/CowCatcherAI
+Don't just take our word for it—see the results for yourself! 🌟
+[![Open in Spaces](https://huggingface.co/datasets/huggingface/badges/raw/main/open-in-hf-spaces-lg.svg)](https://huggingface.co/spaces/CowcatcherAI/CowCatcherAI)
+
 ---
+
 🎯 The Goal: Research, Test, Learn
 
 We are shifting our focus. Instead of maintaining complex custom codebases, we are now fully dedicated to research, testing, and community learning. Learning from previously done researches regarding the subject. Our goal is not to write new software, but to understand how existing, powerful computer vision tools can be best applied in the stable. Here we provide the tools and data to replicate cowcatcher or build your own model.
