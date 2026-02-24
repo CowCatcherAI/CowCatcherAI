@@ -159,7 +159,7 @@
         <div class="col-span-5 flex flex-col justify-center">
             <div class="relative">
                 <div class="absolute -top-4 -right-4 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg z-10 animate-pulse">LIVE ALERT</div>
-                <img src="telegram.png" alt="Telegram Notification" class="w-full rounded-2xl shadow-2xl border-4 border-white">
+                <img src="4.png" alt="Telegram Notification" class="w-full rounded-2xl shadow-2xl border-4 border-white">
             </div>
         </div>
     </div>
@@ -177,13 +177,22 @@
 
     <div class="mt-auto px-[60px] pb-10">
         <div class="grid grid-cols-3 gap-6 pt-6 border-t border-gray-100">
-            <div>
-                <h5 class="font-bold text-green-900 text-xs mb-2 uppercase">Requirements (recommended)</h5>
-                <ul class="text-[10px] text-gray-600 space-y-1">
-                    <li><i class="fas fa-check text-green-500 mr-1"></i> NVIDIA GTX 1050 or better</li>
-                    <li><i class="fas fa-check text-green-500 mr-1"></i> Standard IP-Cameras</li>
-                    <li><i class="fas fa-check text-green-500 mr-1"></i> Internet over cable </li>
-                </ul>
+            <div class="flex flex-col items-center sm:items-start"> 
+                <h5 class="font-bold text-green-900 text-xs mb-2 uppercase">Try our mobile demo</h5>
+                
+                <div class="w-24 h-24 ml-6 border border-gray-100 rounded bg-white overflow-hidden p-1">
+                    <a href="https://huggingface.co/spaces/CowcatcherAI/CowCatcherAI" 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       class="block w-full h-full transition-opacity hover:opacity-80">
+                        
+                        <img src="cowcatcher_demo_qr_code.png" 
+                             alt="Mobile Demo QR" 
+                             class="w-full h-full object-contain cursor-pointer">
+                             
+                    </a>
+                </div>
+                
             </div>
 
             <div>
@@ -200,9 +209,10 @@
             <div class="flex flex-col items-center justify-center bg-green-900 text-white rounded-xl p-4">
                 <p class="text-[10px] mb-2 font-semibold text-center">
                     Join the Community <br> 
-                    cowcatcher ai | open source project
+                    cowcatcher ai | open source project <br>
+                    contact: cowcatcherai@gmail.com
                 </p>
-                <div class="flex gap-4 text-lg">
+                <div class="flex gap-4 text-lg items-center">
                     <a href="https://github.com/CowCatcherAI/CowCatcherAI" target="_blank" rel="noopener noreferrer" class="hover:text-green-400 transition-colors">
                         <i class="fab fa-github"></i>
                     </a>
@@ -217,6 +227,15 @@
 
                     <a href="https://cowcatcherai.com" target="_blank" rel="noopener noreferrer" class="hover:text-green-400 transition-colors">
                         <i class="fas fa-globe"></i>
+                    </a>
+
+                    <a href="https://huggingface.co/spaces/CowcatcherAI/CowCatcherAI"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="hover:opacity-80 transition-opacity">
+                        <img src="./hf-logo-pirate.svg"
+                             alt="Hugging Face"
+                             class="h-5 w-5">
                     </a>
                 </div>
             </div>
