@@ -1,0 +1,54 @@
+
+{
+            "detection": {
+                "source": [
+                    "rtsp://<camera_1>",
+                    "rtsp://<camera_2>"
+                ],
+                "interval": 0.4,
+                "frame_retention": 30
+            },
+            "yolo": {
+                "model": "https://github.com/CowCatcherAI/CalvingCatcherAI/releases/tag/CalvingcatcherV1/calvingcatcherV5.pt",
+                "confidence": {
+                    "waterbag": 0.8,
+                    "legs": 0.8,
+                    "head": 0.8,
+                    "body": 0.8,
+                    "calf": 0.8
+                },
+                "cooldown": {
+                    "calf": 900,
+                    "waterbag": 900,
+                    "legs": 900,
+                    "head": 900,
+                    "body": 900
+                },
+                "frames_min": 4,
+                "timeout": 30,
+                "imgsz": 640,
+                "strategy": "LATEST"
+            },
+            "exporters": {
+                "disk": {
+                    "strategy": "ALL",                    
+                    "directory": "dry_cows"
+                },
+                "telegram": {
+                    "token": "<telegram_bot_token>",
+                    "chat": "<telegram_chat_id>",
+                    "alert_every": 5,
+                    "export_rejected": true,
+                    "include_plot": true,
+                    "include_crop": false,
+                    "include_video": true,
+                    "confidence": {
+                        "waterbag": 0.85,
+                        "legs": 0.85,
+                        "head": 0.85,
+                        "body": 0.85,
+                        "calf": 0.9
+                    }
+                }
+            }
+        },
