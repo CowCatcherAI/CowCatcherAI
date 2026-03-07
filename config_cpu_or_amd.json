@@ -18,7 +18,7 @@
           "token": "your_bot_token",
           "chat": "your_chat_id",
           "alert_every": 5,
-          "confidence": 0.87
+          "confidence": 0.88
         },
         "disk": {
           "directory": "mounts"
