@@ -4,48 +4,13 @@
         {
             "detection": {
                 "source": [
-                    "rtsp://<camera_1>",
-                    "rtsp://<camera_2>"
-                ],
-                "interval": 0.2,
-                "frame_retention": 60
-            },
-            "yolo": {
-                "model": "https://github.com/CowCatcherAI/CowCatcherAI/releases/download/model-V16/cowcatcherV15.pt",
-                "confidence": {
-                    "mounting": 0.88
-                },
-                "frames_min": 5,
-                "timeout": 5,
-                "imgsz": 640,
-                "strategy": "LATEST"
-            },
-            "exporters": {
-                "disk": {
-                    "directory": "mounting"
-                },
-                "telegram": {
-                    "token": "<telegram_bot_token>",
-                    "chat": "<telegram_chat_id>",
-                    "alert_every": 5,
-                    "export_rejected": true,
-                    "include_plot": true,
-                    "include_crop": false,
-                    "include_video": true
-                }
-            }
-        },
-        {
-            "detection": {
-                "source": [
-                    "rtsp://<camera_1>",
-                    "rtsp://<camera_2>"
+                    "rtsp_url"
                 ],
                 "interval": 0.2,
                 "frame_retention": 30
             },
             "yolo": {
-                "model": "https://github.com/CowCatcherAI/CowCatcherAI/releases/download/model-V16/calvingcatcherV5.1y11s.pt",
+                "model": "https://github.com/CowCatcherAI/CalvingCatcherAI/releases/tag/CalvingcatcherV1/CalvingcatcherV5.pt",
                 "confidence": {
                     "waterbag": 0.8,
                     "legs": 0.8,
@@ -67,61 +32,8 @@
             },
             "exporters": {
                 "disk": {
-                    "strategy": "ALL",                    
-                    "directory": "dry_cows"
-                },
-                "telegram": {
-                    "token": "<telegram_bot_token>",
-                    "chat": "<telegram_chat_id>",
-                    "alert_every": 5,
-                    "export_rejected": true,
-                    "include_plot": true,
-                    "include_crop": false,
-                    "include_video": true,
-                    "confidence": {
-                        "waterbag": 0.85,
-                        "legs": 0.85,
-                        "head": 0.85,
-                        "body": 0.85,
-                        "calf": 0.9
-                    }
-                }
-            }
-        },
-        {
-            "detection": {
-                "source": [
-                    "rtsp://<camera_1>",
-                    "rtsp://<camera_2>"
-                ],
-                "interval": 0.2,
-                "frame_retention": 30
-            },
-            "yolo": {
-                "model": "https://github.com/CowCatcherAI/CowCatcherAI/releases/download/model-V16/calvingcatcherV5.1y11s.pt",
-                "confidence": {
-                    "waterbag": 0.8,
-                    "legs": 0.8,
-                    "head": 0.8,
-                    "body": 0.8,
-                    "calf": 0.8
-                },
-                "cooldown": {
-                    "calf": 3600,
-                    "waterbag": 1800,
-                    "legs": 3600,
-                    "head": 1800,
-                    "body": 900
-                },
-                "frames_min": 4,
-                "timeout": 30,
-                "imgsz": 640,
-                "strategy": "LATEST"
-            },
-            "exporters": {
-                "disk": {
                     "strategy": "ALL",
-                    "directory": "calving_pen"
+                    "directory": "dry_cows"
                 },
                 "telegram": {
                     "token": "<telegram_bot_token>",
