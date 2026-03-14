@@ -88,8 +88,9 @@ Pick the right file for your hardware:
 
 > **Not sure which to pick?** Start with `winml-onnx` — it works on any modern Windows PC.
 
-📺 [Watch the installation video calvingcatchet model](https://www.youtube.com/watch?v=UtLdXChVMCE)
-📺 [Watch the installation video (The steps are the same; just use the latest 0.6.0 model instead](https://youtu.be/Pf44ZvQtSYU)
+📺 [Watch the installation video calvingcatchet model](https://www.youtube.com/watch?v=UtLdXChVMCE).
+
+📺 [Watch the installation video (The steps are the same; just use the latest 0.6.0 model instead](https://youtu.be/Pf44ZvQtSYU).
 
 ---
 
