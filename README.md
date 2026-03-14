@@ -90,7 +90,7 @@ Pick the right file for your hardware:
 
 📺 [Watch the installation video calvingcatchet model](https://www.youtube.com/watch?v=UtLdXChVMCE).
 
-📺 [Watch the installation video (The steps are the same; just use the latest 0.6.0 model instead](https://youtu.be/Pf44ZvQtSYU).
+📺 [Watch the installation video cowcatcher (The steps are the same; just use the latest 0.6.0 model instead](https://youtu.be/Pf44ZvQtSYU).
 
 ---
 
