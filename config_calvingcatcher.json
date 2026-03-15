@@ -38,7 +38,7 @@
                 "telegram": {
                     "token": "<telegram_bot_token>",
                     "chat": "<telegram_chat_id>",
-                    "alert_every": 5,
+                    "alert_every": 1,
                     "export_rejected": true,
                     "include_plot": true,
                     "include_crop": false,
