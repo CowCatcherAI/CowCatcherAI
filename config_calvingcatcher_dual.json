@@ -1,0 +1,62 @@
+{
+    "$schema": "https://raw.githubusercontent.com/ESchouten/ai-detector/winml-ep/config/config.schema.json",
+    "detectors": [
+        {
+            "detection": {
+                "source": [
+                    "rtsp_url"
+                ],
+                "interval": 0.5,
+                "frame_retention": 30
+            },
+            "yolo": {
+                "model": "https://github.com/CowCatcherAI/CalvingCatcherAI/releases/download/CalvingcatcherV1/calvingcatcherV5.pt",
+                "confidence": {
+                    "waterbag": 0.8,
+                    "legs": 0.8,
+                    "head": 0.8,
+                    "body": 0.8,
+                    "calf": 0.8
+                },
+                "cooldown": {
+                    "calf": 900,
+                    "waterbag": 900,
+                    "legs": 900,
+                    "head": 900,
+                    "body": 900
+                },
+                "frames_min": 4,
+                "timeout": 30,
+                "imgsz": 640,
+                "strategy": "LATEST"
+            },
+            "exporters": {
+                "disk": {
+                    "strategy": "ALL",
+                    "directory": "dry_cows"
+                },
+                "telegram": [
+                    {
+                        "token": "<telegram_bot_token>",
+                        "chat": "<telegram_chat_id>",
+                        "alert_every": 1,
+                        "export_rejected": false,
+                        "include_plot": true,
+                        "include_crop": false,
+                        "include_video": true
+                    },
+                    {
+                        "token": "<telegram_bot_token>",
+                        "chat": "<telegram_chat_id>",
+                        "alert_every": 1,
+                        "export_rejected": false,
+                        "include_plot": true,
+                        "include_crop": false,
+                        "include_video": true
+                    }
+                ]
+            }
+        }
+    ]
+}
+
