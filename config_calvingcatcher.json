@@ -6,7 +6,7 @@
                 "source": [
                     "rtsp_url"
                 ],
-                "interval": 0.2,
+                "interval": 0.4,
                 "frame_retention": 30
             },
             "yolo": {
@@ -25,7 +25,7 @@
                     "head": 900,
                     "body": 900
                 },
-                "frames_min": 4,
+                "frames_min": 10,
                 "timeout": 30,
                 "imgsz": 640,
                 "strategy": "LATEST"
