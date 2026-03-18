@@ -1,5 +1,4 @@
-{
-    "$schema": "https://raw.githubusercontent.com/ESchouten/ai-detector/winml-ep/config/config.schema.json",
+"$schema": "https://raw.githubusercontent.com/ESchouten/ai-detector/winml-ep/config/config.schema.json",
     "detectors": [
         {
             "detection": {
@@ -25,14 +24,14 @@
                     "head": 900,
                     "body": 900
                 },
-                "frames_min": 4,
+                "frames_min": 8,
                 "timeout": 30,
                 "imgsz": 640,
                 "strategy": "LATEST"
             },
             "exporters": {
                 "disk": {
-                    "strategy": "ALL",
+                    "strategy": "BEST",
                     "directory": "dry_cows"
                 },
                 "telegram": [
@@ -41,27 +40,23 @@
                         "chat": "<telegram_chat_id>",
                         "alert_every": 1,
                         "export_rejected": false,
-                        "include_plot": true,
+                        "include_plot": false,
                         "include_crop": false,
-                        "include_video": true
+                        "include_video": true,
+                        "include_image": true
                     },
                     {
                         "token": "<telegram_bot_token>",
                         "chat": "<telegram_chat_id>",
                         "alert_every": 1,
                         "export_rejected": false,
-                        "include_plot": true,
+                        "include_plot": false,
                         "include_crop": false,
-                        "include_video": true
-                    },
-                    {
-                         "token": "XXX",
-                         "chat": "XXX",
-                         "include_image": true
+                        "include_video": true,
+                        "include_image": true
                     }
                 ] 
             }
         }
     ]
 }
-
