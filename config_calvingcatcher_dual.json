@@ -25,7 +25,7 @@
                     "head": 900,
                     "body": 900
                 },
-                "frames_min": 4,
+                "frames_min": 8,
                 "timeout": 30,
                 "imgsz": 640,
                 "strategy": "LATEST"
