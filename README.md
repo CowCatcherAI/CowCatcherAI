@@ -1,7 +1,7 @@
 # 🐄 CowCatcher AI
 ### Automatic Heat Detection for Dairy Farms
 
-### 🌐
+### 
 Check out the website for all the information: [cowcatcherai.com](https://jacobsfarm.github.io/website/)
 **The website is available in multiple languages such as Deutsch, Français, Nederlands, and Español.**
 
