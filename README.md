@@ -2,7 +2,7 @@
 ### Automatic Heat Detection for Dairy Farms
 
 ### 🌐
-Check out the website for all the information: [https://jacobsfarm.github.io/website/](https://jacobsfarm.github.io/website/)
+Check out the website for all the information: [cowcatcherai.com](https://jacobsfarm.github.io/website/)
 **The website is available in multiple languages such as Deutsch, Français, Nederlands, and Español.**
 
 CowCatcher AI watches your barn cameras 24/7 and sends you a photo alert the moment a cow shows mounting behavior — the primary sign of estrus (heat). No more missed heats. No more checking cameras manually.
