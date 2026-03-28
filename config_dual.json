@@ -29,6 +29,7 @@
           }
         ],
         "disk": {
+          "strategy": "ALL",
           "directory": "mounts"
         }
       }
