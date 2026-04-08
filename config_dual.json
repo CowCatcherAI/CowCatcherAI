@@ -7,7 +7,7 @@
         ]
       },
       "yolo": {
-        "model": "https://github.com/CowCatcherAI/CowCatcherAI/releases/download/model-V16/cowcatcherV15.pt",
+        "model": "https://github.com/CowCatcherAI/CowCatcherAI/releases/download/model-V16/cowcatcherV16.3.pt",
         "confidence": 0.84,
         "frames_min": 4,
         "timeout": 6,
