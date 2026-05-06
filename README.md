@@ -177,6 +177,7 @@ Replace `[IP]` with your camera's IP address and `[PASS]` with its password. Def
 | **D-Link** | Main | `rtsp://admin:[PASS]@[IP]:554/live1.sdp` |
 | **Wyze** | Main | `rtsp://admin:[PASS]@[IP]:554/live` |
 | **Ctronic** | Main | `rtsp://admin:[PASS]@[IP]:554/11` |
+| **Ubiquiti UniFi** | Main | `rtsps://[IP]:[RTSPS_PORT]/[RTSP_ALIAS]?enableSrtp` |
 
 > **Not listed?** Search `"[your camera brand] RTSP URL"`, or test your stream in **VLC** → *Media → Open Network Stream*.
 >
