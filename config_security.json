@@ -1,0 +1,44 @@
+{
+    "detectors": [
+        {
+            "detection": {
+                "source": [
+                    "rtsp_url"
+                ]
+            },
+            "yolo": {
+                "model": "https://github.com/ultralytics/assets/releases/download/v8.4.0/yolo26m.pt",
+                "confidence": {
+                    "person": 0.8,
+                    "car":0.8
+                },
+                "time_max": 30,
+                "timeout": 6,
+                "frames_min": 6
+            },
+            "exporters": {
+                "telegram": [
+                    {
+                        "token": "<your_bot_token>",
+                        "chat": "<your_chat_id>",
+                        "alert_every": 1,
+                        "confidence": 0.88
+                    },
+                    {
+                        "token": "<your_bot_token>",
+                        "chat": "<your_chat_id>",
+                        "alert_every": 1,
+                        "confidence": 0.87
+                    }
+                ],
+                "disk": [
+                    {
+                        "strategy": "BEST",
+                        "directory": "activations"
+                    }
+                ]
+            }
+        }
+    ],
+    "$schema": "https://raw.githubusercontent.com/ESchouten/ai-detector/v0.6.3/config/config.schema.json"
+}
