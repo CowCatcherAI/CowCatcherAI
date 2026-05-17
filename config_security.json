@@ -12,7 +12,7 @@
                     "person": 0.8,
                     "car":0.8
                 },
-                "time_max": 30,
+                "time_max": 10,
                 "timeout": 6,
                 "frames_min": 6
             },
