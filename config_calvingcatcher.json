@@ -25,6 +25,7 @@
                     "head": 900,
                     "body": 900
                 },
+                "time_max": 20,
                 "frames_min": 10,
                 "timeout": 30,
                 "imgsz": 640,
