@@ -33,7 +33,7 @@
             },
             "exporters": {
                 "disk": {
-                    "strategy": "ALL",
+                    "strategy": "BEST",
                     "directory": "dry_cows"
                 },
                 "telegram": {
