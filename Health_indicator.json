@@ -1,7 +1,8 @@
 {
-"$schema": "xxxxxxx",
-"health": {
-    "url": "https://hc-ping.com/xxxxxxxxxxx",
-    "method": "GET",
-    "interval": 60
-},
+    "$schema": "xxxxx",
+    "health": {
+        "url": "https://hc-ping.com/xxxxx",
+        "method": "GET",
+        "interval": 60
+    },
+    "detectors": [
