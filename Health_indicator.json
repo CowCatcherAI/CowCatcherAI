@@ -1,0 +1,7 @@
+{
+    "$schema": "xxxxxxx",
+    "health": {
+        "url": "https://hc-ping.com/xxxxxxxxxxx",
+        "method": "GET",
+        "interval": 60
+    },
