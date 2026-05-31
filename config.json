@@ -1,4 +1,9 @@
 {
+    "health": {
+        "url": "https://hc-ping.com/xxxxx",
+        "method": "GET",
+        "interval": 60
+    },
   "detectors": [
     {
       "detection": {
