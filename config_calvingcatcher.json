@@ -7,7 +7,7 @@
                     "rtsp_url"
                 ],
                 "interval": 0.4,
-                "frame_retention": 30
+                "frame_retention": 20
             },
             "yolo": {
                 "model": "https://github.com/CowCatcherAI/CalvingCatcherAI/releases/download/CalvingcatcherV1/calvingcatcherV5.pt",
