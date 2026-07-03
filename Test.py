@@ -481,7 +481,7 @@ def main():
                     try:
                         if cell.value and len(str(cell.value)) > max_length:
                             max_length = len(str(cell.value))
-                    except:
+                    except (TypeError, AttributeError):
                         pass
                 # Voeg een klein beetje extra padding toe (bijv. +2) voor de netheid
                 adjusted_width = max_length + 2
