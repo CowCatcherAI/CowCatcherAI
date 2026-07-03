@@ -90,7 +90,8 @@ def load_ground_truth_labels(labels_dir, image_files):
                 with open(label_path, 'r') as f:
                     lines = f.readlines()
                     for line in lines:
-                        if line.strip().startswith('0 '):
+                        parts = line.strip().split()
+                        if parts and parts[0] == '0':
                             has_mounting = True
                             break
             except Exception as e:
