@@ -543,9 +543,8 @@ class YoloAnnotationApp:
         self.next_image()
     
     def write_label_file(self, label_path):
-        # Read image for dimensions
-        img = cv2.imread(self.current_img_path)
-        height, width = img.shape[:2]
+        # Reuse already-decoded image (loaded in load_current_image)
+        height, width = self.current_img.shape[:2]
         
         has_detections = False
         
