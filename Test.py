@@ -90,7 +90,8 @@ def load_ground_truth_labels(labels_dir, image_files):
                 with open(label_path, 'r') as f:
                     lines = f.readlines()
                     for line in lines:
-                        if line.strip().startswith('0 '):
+                        parts = line.strip().split()
+                        if parts and parts[0] == '0':
                             has_mounting = True
                             break
             except Exception as e:
@@ -480,7 +481,7 @@ def main():
                     try:
                         if cell.value and len(str(cell.value)) > max_length:
                             max_length = len(str(cell.value))
-                    except:
+                    except (TypeError, AttributeError):
                         pass
                 # Voeg een klein beetje extra padding toe (bijv. +2) voor de netheid
                 adjusted_width = max_length + 2
