@@ -319,6 +319,15 @@ class YoloAnnotationApp:
         # Load original image
         img_path = os.path.join(self.input_folder, self.image_files[self.current_index])
         original_img = cv2.imread(img_path)
+        if original_img is None:
+            skipped_name = self.image_files[self.current_index]
+            self.status_label.config(text=f"Error: Could not read image {skipped_name}, skipping")
+            self.image_files.pop(self.current_index)
+            if self.current_index >= len(self.image_files):
+                self.current_index = max(0, len(self.image_files) - 1)
+            if self.image_files:
+                self.load_current_image()
+            return
         original_img = cv2.cvtColor(original_img, cv2.COLOR_BGR2RGB)
         
         # Create a copy for prediction
@@ -534,9 +543,8 @@ class YoloAnnotationApp:
         self.next_image()
     
     def write_label_file(self, label_path):
-        # Read image for dimensions
-        img = cv2.imread(self.current_img_path)
-        height, width = img.shape[:2]
+        # Reuse already-decoded image (loaded in load_current_image)
+        height, width = self.current_img.shape[:2]
         
         has_detections = False
         
