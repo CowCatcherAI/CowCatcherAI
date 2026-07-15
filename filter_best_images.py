@@ -101,6 +101,8 @@ def main():
                 target_file = os.path.join(TARGET_FOLDER, new_name)
                 
                 print(f" -> Moving: {filename} (Score: {score:.2f})")
+                if os.path.exists(target_file):
+                    os.remove(target_file)
                 shutil.move(source_file, target_file)
 
     print("\n--- Done! ---")
