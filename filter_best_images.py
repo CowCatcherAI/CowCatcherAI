@@ -31,7 +31,11 @@ VALID_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.bmp'}
 
 def main():
     os.makedirs(TARGET_FOLDER, exist_ok=True)
-    
+
+    if not os.path.isdir(SOURCE_FOLDER):
+        print(f"ERROR: Source folder not found: {SOURCE_FOLDER}")
+        return
+
     print(f"Loading model: {MODEL_PATH}...")
     try:
         model = YOLO(MODEL_PATH)
