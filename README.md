@@ -1,5 +1,13 @@
 # 🐄 CowCatcher AI
-### Automatic Heat Detection for Dairy Farms
+### Automatic Heat and Calving Detection for Dairy Farms
+
+<p align="left">
+  <a href="https://jacobsfarm.github.io/website/"><img src="https://img.shields.io/badge/Website-cowcatcherai.com-blue?logo=googlechrome&logoColor=white" alt="Website"></a>
+  <a href="https://huggingface.co/spaces/CowcatcherAI/CowCatcherAI"><img src="https://img.shields.io/badge/🤗%20Hugging%20Face-Spaces-yellow" alt="Hugging Face"></a>
+  <a href="https://t.me/+SphG4deaWVNkYTQ8"><img src="https://img.shields.io/badge/Telegram-Join%20Chat-2CA5E0?logo=telegram&logoColor=white" alt="Telegram"></a>
+  <a href="https://github.com/eschouten/ai-detector"><img src="https://img.shields.io/badge/GitHub-AI--Detector-181717?logo=github&logoColor=white" alt="AI-Detector Repo"></a>
+  <a href="https://github.com/JacobsFarm/image_extractor"><img src="https://img.shields.io/badge/GitHub-image__extractor-181717?logo=github&logoColor=white" alt="image_extractor Repo"></a>
+</p>
 
 ### 
 Check out the website for all the information: [cowcatcherai.com](https://jacobsfarm.github.io/website/)
@@ -231,6 +239,10 @@ There is likely a syntax error in your [config.json](cci:7://file:///Users/erik/
 ---
 
 ## 🤝 Community & Support
+
+Want to help make the AI detection model even more accurate? You can easily extract camera footage or frames and share them with us using the Image Extractor.
+
+👉 **[Download de Image Extractor op GitHub](https://github.com/JacobsFarm/image_extractor)**
 
 - 💬 **Facebook:** [CowCatcher AI Group](https://www.facebook.com/groups/1765616710830233)
 - 📱 **Telegram:** [CowCatcher AI Chat](https://t.me/+SphG4deaWVNkYTQ8)
