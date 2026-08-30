@@ -15,6 +15,9 @@ Check out the website for all the information: [cowcatcherai.com](https://jacobs
 
 CowCatcher AI watches your barn cameras 24/7 and sends you a photo alert the moment a cow shows mounting behavior — the primary sign of estrus (heat). No more missed heats. No more checking cameras manually.
 
+> [!NOTE]
+> **Latest Release:** Our latest model is `cowcatcherV17.2`.
+
 > **Powered by [AI Detector](https://github.com/eschouten/ai-detector)** — all video processing happens locally on your farm. No footage is ever sent to the cloud.
 
 ![CowCatcher Overview](https://github.com/user-attachments/assets/cee1e5f5-f9ae-4241-b8ad-8a9313b4a70c)
