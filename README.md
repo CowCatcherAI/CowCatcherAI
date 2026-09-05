@@ -22,6 +22,9 @@ CowCatcher AI watches your barn cameras 24/7 and sends you a photo alert the mom
 
 ![CowCatcher Overview](https://github.com/user-attachments/assets/cee1e5f5-f9ae-4241-b8ad-8a9313b4a70c)
 
+<img width="2560" height="1920" alt="5773765776748777253_blurred" src="https://github.com/user-attachments/assets/d19feff5-20b0-466c-b1fb-524782d86e3a" />
+
+
 ---
 
 ## ✨ Key Features
