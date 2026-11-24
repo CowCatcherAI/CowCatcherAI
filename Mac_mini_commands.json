@@ -1,0 +1,16 @@
+{
+  "mac_mini_server_settings": {
+    "auto_restart_after_power_failure": {
+      "description": "Automatically restart the Mac mini after a power outage",
+      "command": "sudo pmset -a autorestart 1",
+      "verify_command": "pmset -g | grep autorestart",
+      "expected_result": "autorestart 1"
+    },
+    "prevent_sleep": {
+      "description": "Prevent the Mac mini from going to sleep so it stays on 24/7",
+      "command": "sudo pmset -a sleep 0 displaysleep 0 disksleep 0",
+      "verify_command": "pmset -g | grep -E \"sleep|disablesleep\"",
+      "expected_result": "sleep 0, displaysleep 0, disksleep 0"
+    }
+  }
+}
